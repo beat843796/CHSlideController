@@ -1,0 +1,309 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		ABF40589163178300097AD38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF40588163178300097AD38 /* UIKit.framework */; };
+		ABF4058B163178300097AD38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF4058A163178300097AD38 /* Foundation.framework */; };
+		ABF4058D163178300097AD38 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF4058C163178300097AD38 /* CoreGraphics.framework */; };
+		ABF40593163178300097AD38 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = ABF40591163178300097AD38 /* InfoPlist.strings */; };
+		ABF40595163178300097AD38 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF40594163178300097AD38 /* main.m */; };
+		ABF40599163178300097AD38 /* CHAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF40598163178300097AD38 /* CHAppDelegate.m */; };
+		ABF405A1163178530097AD38 /* CHSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF405A0163178530097AD38 /* CHSlideController.m */; };
+		ABF405A7163187B00097AD38 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF405A6163187B00097AD38 /* QuartzCore.framework */; };
+		ABF405AC16318D5B0097AD38 /* CHStaticDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF405AB16318D5B0097AD38 /* CHStaticDemo.m */; };
+		ABF405AF1631922B0097AD38 /* CHSlidingDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF405AE1631922B0097AD38 /* CHSlidingDemo.m */; };
+		ABF405B21631928B0097AD38 /* DemoSlideControllerSubclass.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF405B11631928B0097AD38 /* DemoSlideControllerSubclass.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		ABF40584163178300097AD38 /* CHSlideController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CHSlideController.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABF40588163178300097AD38 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		ABF4058A163178300097AD38 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		ABF4058C163178300097AD38 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		ABF40590163178300097AD38 /* CHSlideController-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CHSlideController-Info.plist"; sourceTree = "<group>"; };
+		ABF40592163178300097AD38 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		ABF40594163178300097AD38 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		ABF40596163178300097AD38 /* CHSlideController-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CHSlideController-Prefix.pch"; sourceTree = "<group>"; };
+		ABF40597163178300097AD38 /* CHAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CHAppDelegate.h; sourceTree = "<group>"; };
+		ABF40598163178300097AD38 /* CHAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CHAppDelegate.m; sourceTree = "<group>"; };
+		ABF4059F163178530097AD38 /* CHSlideController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHSlideController.h; sourceTree = "<group>"; };
+		ABF405A0163178530097AD38 /* CHSlideController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHSlideController.m; sourceTree = "<group>"; };
+		ABF405A6163187B00097AD38 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		ABF405AA16318D5B0097AD38 /* CHStaticDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHStaticDemo.h; sourceTree = "<group>"; };
+		ABF405AB16318D5B0097AD38 /* CHStaticDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHStaticDemo.m; sourceTree = "<group>"; };
+		ABF405AD1631922B0097AD38 /* CHSlidingDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHSlidingDemo.h; sourceTree = "<group>"; };
+		ABF405AE1631922B0097AD38 /* CHSlidingDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHSlidingDemo.m; sourceTree = "<group>"; };
+		ABF405B01631928B0097AD38 /* DemoSlideControllerSubclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoSlideControllerSubclass.h; sourceTree = "<group>"; };
+		ABF405B11631928B0097AD38 /* DemoSlideControllerSubclass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoSlideControllerSubclass.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		ABF40581163178300097AD38 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ABF405A7163187B00097AD38 /* QuartzCore.framework in Frameworks */,
+				ABF40589163178300097AD38 /* UIKit.framework in Frameworks */,
+				ABF4058B163178300097AD38 /* Foundation.framework in Frameworks */,
+				ABF4058D163178300097AD38 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		ABF40579163178300097AD38 = {
+			isa = PBXGroup;
+			children = (
+				ABF4058E163178300097AD38 /* CHSlideController */,
+				ABF40587163178300097AD38 /* Frameworks */,
+				ABF40585163178300097AD38 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		ABF40585163178300097AD38 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ABF40584163178300097AD38 /* CHSlideController.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ABF40587163178300097AD38 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ABF405A6163187B00097AD38 /* QuartzCore.framework */,
+				ABF40588163178300097AD38 /* UIKit.framework */,
+				ABF4058A163178300097AD38 /* Foundation.framework */,
+				ABF4058C163178300097AD38 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		ABF4058E163178300097AD38 /* CHSlideController */ = {
+			isa = PBXGroup;
+			children = (
+				ABF405A916318D2F0097AD38 /* SlideController */,
+				ABF405A816318D260097AD38 /* Demo */,
+				ABF40597163178300097AD38 /* CHAppDelegate.h */,
+				ABF40598163178300097AD38 /* CHAppDelegate.m */,
+				ABF4058F163178300097AD38 /* Supporting Files */,
+			);
+			path = CHSlideController;
+			sourceTree = "<group>";
+		};
+		ABF4058F163178300097AD38 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				ABF40590163178300097AD38 /* CHSlideController-Info.plist */,
+				ABF40591163178300097AD38 /* InfoPlist.strings */,
+				ABF40594163178300097AD38 /* main.m */,
+				ABF40596163178300097AD38 /* CHSlideController-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		ABF405A816318D260097AD38 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				ABF405AA16318D5B0097AD38 /* CHStaticDemo.h */,
+				ABF405AB16318D5B0097AD38 /* CHStaticDemo.m */,
+				ABF405AD1631922B0097AD38 /* CHSlidingDemo.h */,
+				ABF405AE1631922B0097AD38 /* CHSlidingDemo.m */,
+				ABF405B01631928B0097AD38 /* DemoSlideControllerSubclass.h */,
+				ABF405B11631928B0097AD38 /* DemoSlideControllerSubclass.m */,
+			);
+			name = Demo;
+			sourceTree = "<group>";
+		};
+		ABF405A916318D2F0097AD38 /* SlideController */ = {
+			isa = PBXGroup;
+			children = (
+				ABF4059F163178530097AD38 /* CHSlideController.h */,
+				ABF405A0163178530097AD38 /* CHSlideController.m */,
+			);
+			name = SlideController;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		ABF40583163178300097AD38 /* CHSlideController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABF4059C163178300097AD38 /* Build configuration list for PBXNativeTarget "CHSlideController" */;
+			buildPhases = (
+				ABF40580163178300097AD38 /* Sources */,
+				ABF40581163178300097AD38 /* Frameworks */,
+				ABF40582163178300097AD38 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CHSlideController;
+			productName = CHSlideController;
+			productReference = ABF40584163178300097AD38 /* CHSlideController.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ABF4057B163178300097AD38 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = ABF4057E163178300097AD38 /* Build configuration list for PBXProject "CHSlideController" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = ABF40579163178300097AD38;
+			productRefGroup = ABF40585163178300097AD38 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ABF40583163178300097AD38 /* CHSlideController */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		ABF40582163178300097AD38 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ABF40593163178300097AD38 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		ABF40580163178300097AD38 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ABF40595163178300097AD38 /* main.m in Sources */,
+				ABF40599163178300097AD38 /* CHAppDelegate.m in Sources */,
+				ABF405A1163178530097AD38 /* CHSlideController.m in Sources */,
+				ABF405AC16318D5B0097AD38 /* CHStaticDemo.m in Sources */,
+				ABF405AF1631922B0097AD38 /* CHSlidingDemo.m in Sources */,
+				ABF405B21631928B0097AD38 /* DemoSlideControllerSubclass.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		ABF40591163178300097AD38 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ABF40592163178300097AD38 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		ABF4059A163178300097AD38 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		ABF4059B163178300097AD38 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		ABF4059D163178300097AD38 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CHSlideController/CHSlideController-Prefix.pch";
+				INFOPLIST_FILE = "CHSlideController/CHSlideController-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		ABF4059E163178300097AD38 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CHSlideController/CHSlideController-Prefix.pch";
+				INFOPLIST_FILE = "CHSlideController/CHSlideController-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		ABF4057E163178300097AD38 /* Build configuration list for PBXProject "CHSlideController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABF4059A163178300097AD38 /* Debug */,
+				ABF4059B163178300097AD38 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ABF4059C163178300097AD38 /* Build configuration list for PBXNativeTarget "CHSlideController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABF4059D163178300097AD38 /* Debug */,
+				ABF4059E163178300097AD38 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ABF4057B163178300097AD38 /* Project object */;
+}
