@@ -388,9 +388,6 @@
 {
     [super viewDidUnload];
     
-    [self setStaticViewController:nil];
-    [self setSlidingViewController:nil];
-    
     [_staticView removeFromSuperview];
     [_slidingView removeFromSuperview];
     
