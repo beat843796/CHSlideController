@@ -126,7 +126,7 @@
     
     // Doing viewcontroller containment magic
     
-    [_staticViewController didMoveToParentViewController:nil];
+    [_staticViewController willMoveToParentViewController:nil];
     [_staticViewController removeFromParentViewController];
     
     [staticViewController.view removeFromSuperview];
@@ -150,7 +150,7 @@
 
     // Doing viewcontroller containment magic
     
-    [_slidingViewController didMoveToParentViewController:nil];
+    [_slidingViewController willMoveToParentViewController:nil];
     [_slidingViewController removeFromParentViewController];
     
     [_slidingViewController.view removeFromSuperview];
