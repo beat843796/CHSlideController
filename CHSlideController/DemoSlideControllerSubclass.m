@@ -62,7 +62,34 @@
 
 -(void)staticDemoDidSelectText:(NSString *)text
 {
-    _textDisplayController.textLabel.text = text;
+    
+    UIViewController *controller;
+    
+    if ([text isEqualToString:@"Test 1"]) {
+        
+        controller = _textDisplayController;
+        _textDisplayController.textLabel.text = text;
+        
+    }else if([text isEqualToString:@"Test 2"]){
+        
+        controller = [[UIViewController alloc] init];
+        controller.view.backgroundColor = [UIColor blueColor];
+        
+        
+    }else if([text isEqualToString:@"Test 3"]){
+        controller = [[UIViewController alloc] init];
+        controller.view.backgroundColor = [UIColor redColor];
+        
+    }
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
+    
+    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(slideButtonPressed:)];
+    
+    controller.navigationItem.leftBarButtonItem = button;
+    controller.navigationController.navigationBar.tintColor = [UIColor darkGrayColor];
+    
+    self.slidingViewController = nav;
     
     [self showSlidingViewAnimated:YES];
 }
