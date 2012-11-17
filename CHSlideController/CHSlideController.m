@@ -41,6 +41,8 @@
 
 @implementation CHSlideController
 
+@synthesize delegate;
+
 @synthesize staticView = _staticView;
 @synthesize slidingView = _slidingView;
 
@@ -93,12 +95,24 @@
 
 -(void)showSlidingViewAnimated:(BOOL)animated
 {
+    
+    if (delegate && [delegate respondsToSelector:@selector(slideController:willShowSlindingController:)]) {
+        [delegate slideController:self willShowSlindingController:self.slidingViewController];
+    }
+    
     isStaticViewVisible = NO;
     
     if (animated) {
         [UIView animateWithDuration:kSwipeAnimationTime animations:^{
             [self layoutForOrientation:self.interfaceOrientation];
-        } ];
+        } completion:^(BOOL finished) {
+            // inform delegate
+            
+            if (delegate && [delegate respondsToSelector:@selector(slideController:didShowSlindingController:)]) {
+                [delegate slideController:self didShowSlindingController:self.slidingViewController];
+            }
+            
+        }];
     }else {
         [self layoutForOrientation:self.interfaceOrientation];
     }
@@ -106,12 +120,24 @@
 
 -(void)hideSlidingViewAnimated:(BOOL)animated
 {
+    
+    if (delegate && [delegate respondsToSelector:@selector(slideController:willHideSlindingController:)]) {
+        [delegate slideController:self willHideSlindingController:self.slidingViewController];
+    }
+    
     isStaticViewVisible = YES;
     
     if (animated) {
         [UIView animateWithDuration:kSwipeAnimationTime animations:^{
             [self layoutForOrientation:self.interfaceOrientation];
-        } ];
+        } completion:^(BOOL finished) {
+            // inform delegate
+            
+            if (delegate && [delegate respondsToSelector:@selector(slideController:didHideSlindingController:)]) {
+                [delegate slideController:self didHideSlindingController:self.slidingViewController];
+            }
+            
+        }];
     }else {
         [self layoutForOrientation:self.interfaceOrientation];
     }

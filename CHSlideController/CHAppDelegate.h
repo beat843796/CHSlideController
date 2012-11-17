@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DemoSlideControllerSubclass.h"
 
-@interface CHAppDelegate : UIResponder <UIApplicationDelegate>
+@interface CHAppDelegate : UIResponder <UIApplicationDelegate, CHSlideControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

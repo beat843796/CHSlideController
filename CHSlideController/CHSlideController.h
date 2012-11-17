@@ -19,8 +19,21 @@
 
 #import <UIKit/UIKit.h>
 
+@class CHSlideController;
+@protocol CHSlideControllerDelegate <NSObject>
+
+@optional
+-(void)slideController:(CHSlideController *)slideController willShowSlindingController:(UIViewController *)slidingController;
+-(void)slideController:(CHSlideController *)slideController willHideSlindingController:(UIViewController *)slidingController;
+-(void)slideController:(CHSlideController *)slideController didShowSlindingController:(UIViewController *)slidingController;
+-(void)slideController:(CHSlideController *)slideController didHideSlindingController:(UIViewController *)slidingController;
+
+@end
+
 @interface CHSlideController : UIViewController
 {
+    __weak id<CHSlideControllerDelegate> delegate;
+    
     @protected
     BOOL useFixedStaticViewWidth;       // Indicates the use of a fixed with, gets set with setStaticSlideWidth automatically
     BOOL isStaticViewVisible;           // Indicates if the static view is fully visible or not
@@ -34,6 +47,8 @@
     NSInteger xPosEnd;
     NSInteger direction; // -1 = left, +1 = right, 0 = no movement
 }
+
+@property (nonatomic, weak) id<CHSlideControllerDelegate> delegate;
 
 // On that view the staticcontrollers view gets added as a subview
 @property (strong, nonatomic, readonly) UIView *staticView;

@@ -18,6 +18,7 @@
     
     // creating root controller
     DemoSlideControllerSubclass *root = [[DemoSlideControllerSubclass alloc] init];
+    root.delegate = self;
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -27,6 +28,29 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+////////////////////////////////////////////////////////////
+#pragma mark - CHSlideController Delegate
+
+-(void)slideController:(CHSlideController *)slideController willShowSlindingController:(UIViewController *)slidingController
+{
+    NSLog(@"Will show sliding controller");
+}
+
+-(void)slideController:(CHSlideController *)slideController didShowSlindingController:(UIViewController *)slidingController
+{
+    NSLog(@"Did show sliding controller");
+}
+
+-(void)slideController:(CHSlideController *)slideController willHideSlindingController:(UIViewController *)slidingController
+{
+    NSLog(@"Will hide sliding controller");
+}
+
+-(void)slideController:(CHSlideController *)slideController didHideSlindingController:(UIViewController *)slidingController
+{
+    NSLog(@"Did hide sliding controller");
 }
 
 @end
