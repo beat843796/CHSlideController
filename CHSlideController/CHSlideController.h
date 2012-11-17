@@ -17,6 +17,8 @@
 //  Copyright (c) 2012 appingo mobile e.U. All rights reserved.
 //
 
+// TODO: implement interactive sliding support for right static view
+
 #import <UIKit/UIKit.h>
 
 @class CHSlideController;
@@ -28,6 +30,16 @@
 -(void)slideController:(CHSlideController *)slideController didShowSlindingController:(UIViewController *)slidingController;
 -(void)slideController:(CHSlideController *)slideController didHideSlindingController:(UIViewController *)slidingController;
 
+-(void)slideController:(CHSlideController *)slideController willShowLeftStaticController:(UIViewController *)leftStaticController;
+-(void)slideController:(CHSlideController *)slideController didShowLeftStaticController:(UIViewController *)leftStaticController;
+-(void)slideController:(CHSlideController *)slideController willHideLeftStaticController:(UIViewController *)leftStaticController;
+-(void)slideController:(CHSlideController *)slideController didHideLeftStaticController:(UIViewController *)leftStaticController;
+
+-(void)slideController:(CHSlideController *)slideController willShowRightStaticController:(UIViewController *)leftStaticController;
+-(void)slideController:(CHSlideController *)slideController didShowRightStaticController:(UIViewController *)leftStaticController;
+-(void)slideController:(CHSlideController *)slideController willHideRightStaticController:(UIViewController *)leftStaticController;
+-(void)slideController:(CHSlideController *)slideController didHideRightStaticController:(UIViewController *)leftStaticController;
+
 @end
 
 @interface CHSlideController : UIViewController
@@ -36,9 +48,11 @@
     
     @protected
     BOOL useFixedStaticViewWidth;       // Indicates the use of a fixed with, gets set with setStaticSlideWidth automatically
-    BOOL isStaticViewVisible;           // Indicates if the static view is fully visible or not
-    
+    BOOL isLeftStaticViewVisible;       // Indicates if the left static view is fully visible or not
+    BOOL isRightStaticViewVisible;      // Indicates if the right static view is fully visible or not
     // Helpers for detecting swipe directions
+    
+    UIViewController *lastVisibleController;
     
     @private
     NSInteger xPosStart;
@@ -50,14 +64,20 @@
 
 @property (nonatomic, weak) id<CHSlideControllerDelegate> delegate;
 
-// On that view the staticcontrollers view gets added as a subview
-@property (strong, nonatomic, readonly) UIView *staticView;
+// On that view the left staticcontrollers view gets added as a subview
+@property (strong, nonatomic, readonly) UIView *leftStaticView;
+
+// On that view the right staticcontrollers view gets added as a subview
+@property (strong, nonatomic, readonly) UIView *rightStaticView;
 
 // On that view the slidingcontrollers view gets added as a subview
 @property (strong, nonatomic, readonly) UIView *slidingView;
 
-// The Static Controller that does not move
-@property (strong, nonatomic) UIViewController *staticViewController;
+// The Static Controller that does not move on the left side
+@property (strong, nonatomic) UIViewController *leftStaticViewController;
+
+// The Static Controller that does not move on the right side
+@property (strong, nonatomic) UIViewController *rightStaticViewController;
 
 // The sliding controller that covers the staticcontroller and is moving left/right
 @property (strong, nonatomic) UIViewController *slidingViewController;
@@ -74,13 +94,19 @@
 // the space slideview keeps visible when static view is shown
 @property (assign, nonatomic) NSInteger slideViewPaddingRight;
 
-// If set the static view will use it as a fixed width. sets useFixedStaticViewWidth to YES
-@property (assign, nonatomic) NSInteger staticViewWidth;
+// If set the left static view will use it as a fixed width. sets useFixedStaticViewWidth to YES
+@property (assign, nonatomic) NSInteger leftStaticViewWidth;
+
+// If set the right static view will use it as a fixed width. sets useFixedStaticViewWidth to YES
+@property (assign, nonatomic) NSInteger rightStaticViewWidth;
 
 // Animates the Sliding View in
 -(void)showSlidingViewAnimated:(BOOL)animated;
 
-// Animated the Sliding View out
--(void)hideSlidingViewAnimated:(BOOL)animated;
+// Animated the Sliding View out to the right
+-(void)showLeftStaticView:(BOOL)animated;
+
+// Animted the Sliding View out to the left
+-(void)showRightStaticView:(BOOL)animated;
 
 @end

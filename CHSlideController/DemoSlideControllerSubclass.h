@@ -15,5 +15,6 @@
 // Defining the controllers we wanna display in the slide controller
 @property (nonatomic, strong) CHSlidingDemo *textDisplayController;
 @property (nonatomic, strong) CHStaticDemo *textSelectionController;
+@property (nonatomic, strong) UIViewController *rightController;
 
 @end

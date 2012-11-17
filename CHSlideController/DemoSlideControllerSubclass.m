@@ -10,8 +10,9 @@
 
 @interface DemoSlideControllerSubclass (private) 
 
--(void)pressedButton;
-    
+-(void)pressedLeftButton;
+-(void)pressedRightButton;
+
 @end
 
 @implementation DemoSlideControllerSubclass
@@ -42,15 +43,22 @@
         // Adding navcontroller and barbutton
         
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_textDisplayController];
-        UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(slideButtonPressed:)];
+        UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(pressedLeftButton)];
+        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(pressedRightButton)];
         
         _textDisplayController.navigationItem.leftBarButtonItem = button;
         _textDisplayController.navigationController.navigationBar.tintColor = [UIColor darkGrayColor];
+        _textDisplayController.navigationItem.rightBarButtonItem = rightButton;
         
         // finally assigning the controllers as static and sliding view controller
         // to the CHSlideController
         
-        self.staticViewController = _textSelectionController;
+        
+        _rightController = [[UIViewController alloc] init];
+        _rightController.view.backgroundColor = [UIColor darkGrayColor];
+        
+        self.leftStaticViewController = _textSelectionController;
+        self.rightStaticViewController = _rightController;
         self.slidingViewController = nav;
         
     }
@@ -84,8 +92,10 @@
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
     
-    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(slideButtonPressed:)];
+    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(pressedLeftButton)];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(pressedRightButton)];
     
+    controller.navigationItem.rightBarButtonItem = rightButton;
     controller.navigationItem.leftBarButtonItem = button;
     controller.navigationController.navigationBar.tintColor = [UIColor darkGrayColor];
     
@@ -94,19 +104,28 @@
     [self showSlidingViewAnimated:YES];
 }
 
--(void)pressedButton
+-(void)pressedLeftButton
 {
     
-    if (isStaticViewVisible) {
+    if (isLeftStaticViewVisible) {
         [self showSlidingViewAnimated:YES];
     }else {
-        [self hideSlidingViewAnimated:YES];
+        [self showLeftStaticView:YES];
     }
     
     
 }
 
-
+-(void)pressedRightButton
+{
+    NSLog(@"Pressed right button");
+    
+    if (isRightStaticViewVisible) {
+        [self showSlidingViewAnimated:YES];
+    }else {
+        [self showRightStaticView:YES];
+    }
+}
 
 
 @end
