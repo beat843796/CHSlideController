@@ -37,9 +37,7 @@
         // Assigning the delegate to get informed when somethin has been selected
         _textSelectionController.delegate = self;
         
-        // uncomment for using a fixed width for the static view
-        //[self setStaticViewWidth:150]; 
-        
+
         // Adding navcontroller and barbutton
         
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_textDisplayController];
@@ -56,6 +54,8 @@
         
         _rightController = [[UIViewController alloc] init];
         _rightController.view.backgroundColor = [UIColor darkGrayColor];
+        
+        //self.allowInteractiveSlideing = YES;
         
         self.leftStaticViewController = _textSelectionController;
         self.rightStaticViewController = _rightController;

@@ -79,6 +79,7 @@
         _slideViewPaddingRight = kDefaultSlideViewPaddingRight;
         
         _allowInteractiveSlideing = YES;
+        _isVisibleStaticViewMaximized = NO;
     }
     return self;
 }
@@ -245,6 +246,18 @@
     }
 }
 
+
+// maximizes the visible staticview (left or right)
+-(void)maximizeStaticViewAnimated:(BOOL)animated
+{
+    // TODO: implement
+}
+
+// unmaximizes the visible staticview (left or right)
+-(void)unmaximizeStaticViewAnimated:(BOOL)animated
+{
+    // TODO: implement
+}
 
 /////////////////////// Override Setter Properties ////////////////////
 #pragma mark - Setter Methods

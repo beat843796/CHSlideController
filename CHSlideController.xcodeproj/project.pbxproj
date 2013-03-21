@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB18A29316FB2D2200CB9B5A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB18A29216FB2D2100CB9B5A /* Default-568h@2x.png */; };
 		ABF40589163178300097AD38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF40588163178300097AD38 /* UIKit.framework */; };
 		ABF4058B163178300097AD38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF4058A163178300097AD38 /* Foundation.framework */; };
 		ABF4058D163178300097AD38 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF4058C163178300097AD38 /* CoreGraphics.framework */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AB18A29216FB2D2100CB9B5A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		ABF40584163178300097AD38 /* CHSlideController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CHSlideController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABF40588163178300097AD38 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		ABF4058A163178300097AD38 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -111,6 +113,7 @@
 		ABF405A816318D260097AD38 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				AB18A29216FB2D2100CB9B5A /* Default-568h@2x.png */,
 				ABF405AA16318D5B0097AD38 /* CHStaticDemo.h */,
 				ABF405AB16318D5B0097AD38 /* CHStaticDemo.m */,
 				ABF405AD1631922B0097AD38 /* CHSlidingDemo.h */,
@@ -181,6 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABF40593163178300097AD38 /* InfoPlist.strings in Resources */,
+				AB18A29316FB2D2200CB9B5A /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,6 +306,7 @@
 				ABF4059E163178300097AD38 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

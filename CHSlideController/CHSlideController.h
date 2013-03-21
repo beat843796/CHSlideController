@@ -50,11 +50,13 @@
     BOOL useFixedStaticViewWidth;       // Indicates the use of a fixed with, gets set with setStaticSlideWidth automatically
     BOOL isLeftStaticViewVisible;       // Indicates if the left static view is fully visible or not
     BOOL isRightStaticViewVisible;      // Indicates if the right static view is fully visible or not
-    // Helpers for detecting swipe directions
+    
+    CGFloat maximizedStaticViewWidth;   // width of static view in maximized mode, its always self.bounds.width
     
     UIViewController *lastVisibleController;
     
     @private
+    // Helpers for detecting swipe directions
     NSInteger xPosStart;
     NSInteger xPosLastSample;
     NSInteger xPosCurrent;
@@ -85,7 +87,11 @@
 // If set to yes a shadow will be drawn under the slidingView. Defaults to YES
 @property (assign, nonatomic) BOOL drawShadow;
 
+// indicator if the visible static view is maximized or not, defaults to no
+@property (nonatomic, readonly) BOOL isVisibleStaticViewMaximized;
+
 // If set to yes interactivly swiping the sliding view is possible. Defaults to YES
+// now only sliding the leftstaticview is supported
 @property (assign, nonatomic) BOOL allowInteractiveSlideing;
 
 // the space staticview keeps visible when sliding view is shown
@@ -108,5 +114,11 @@
 
 // Animted the Sliding View out to the left
 -(void)showRightStaticView:(BOOL)animated;
+
+// maximizes the visible staticview (left or right)
+-(void)maximizeStaticViewAnimated:(BOOL)animated;
+
+// unmaximizes the visible staticview (left or right)
+-(void)unmaximizeStaticViewAnimated:(BOOL)animated;
 
 @end
