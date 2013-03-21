@@ -52,11 +52,15 @@
         // to the CHSlideController
         
         
-        _rightController = [[UIViewController alloc] init];
+        _rightController = [[CHRightStaticDemo alloc] init];
+        _rightController.delegate = self;
         _rightController.view.backgroundColor = [UIColor darkGrayColor];
         
         //self.allowInteractiveSlideing = YES;
         
+        self.leftStaticViewWidth = 200;
+        self.rightStaticViewWidth = 100;
+        self.slideViewVisibleWidthWhenHidden = 50;
         self.leftStaticViewController = _textSelectionController;
         self.rightStaticViewController = _rightController;
         self.slidingViewController = nav;
@@ -87,6 +91,21 @@
     }else if([text isEqualToString:@"Test 3"]){
         controller = [[UIViewController alloc] init];
         controller.view.backgroundColor = [UIColor redColor];
+        
+    }else if([text isEqualToString:@"Maximize Animated"]){
+        NSLog(@"Maximize animated");
+        
+        [self maximizeAnimated];
+        
+        
+        return;
+        
+    }else if([text isEqualToString:@"Maximize"]){
+        NSLog(@"Maximize without animation");
+        
+        [self maximize];
+        
+        return;
         
     }
     
@@ -127,5 +146,22 @@
     }
 }
 
+-(void)maximize
+{
+    if (self.isVisibleStaticViewMaximized) {
+        [self unmaximizeStaticViewAnimated:NO];
+    }else {
+        [self maximizeStaticViewAnimated:NO];
+    }
+}
+
+-(void)maximizeAnimated
+{
+    if (self.isVisibleStaticViewMaximized) {
+        [self unmaximizeStaticViewAnimated:YES];
+    }else {
+        [self maximizeStaticViewAnimated:YES];
+    }
+}
 
 @end

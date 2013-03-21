@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AB18A29316FB2D2200CB9B5A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB18A29216FB2D2100CB9B5A /* Default-568h@2x.png */; };
+		AB18A29616FB324200CB9B5A /* CHRightStaticDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = AB18A29516FB324200CB9B5A /* CHRightStaticDemo.m */; };
 		ABF40589163178300097AD38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF40588163178300097AD38 /* UIKit.framework */; };
 		ABF4058B163178300097AD38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF4058A163178300097AD38 /* Foundation.framework */; };
 		ABF4058D163178300097AD38 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF4058C163178300097AD38 /* CoreGraphics.framework */; };
@@ -23,6 +24,8 @@
 
 /* Begin PBXFileReference section */
 		AB18A29216FB2D2100CB9B5A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		AB18A29416FB324200CB9B5A /* CHRightStaticDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHRightStaticDemo.h; sourceTree = "<group>"; };
+		AB18A29516FB324200CB9B5A /* CHRightStaticDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHRightStaticDemo.m; sourceTree = "<group>"; };
 		ABF40584163178300097AD38 /* CHSlideController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CHSlideController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABF40588163178300097AD38 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		ABF4058A163178300097AD38 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -59,6 +62,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AB18A29716FB35C500CB9B5A /* left static view controller */ = {
+			isa = PBXGroup;
+			children = (
+				ABF405AA16318D5B0097AD38 /* CHStaticDemo.h */,
+				ABF405AB16318D5B0097AD38 /* CHStaticDemo.m */,
+			);
+			name = "left static view controller";
+			sourceTree = "<group>";
+		};
+		AB18A29816FB35CE00CB9B5A /* right static view controller */ = {
+			isa = PBXGroup;
+			children = (
+				AB18A29416FB324200CB9B5A /* CHRightStaticDemo.h */,
+				AB18A29516FB324200CB9B5A /* CHRightStaticDemo.m */,
+			);
+			name = "right static view controller";
+			sourceTree = "<group>";
+		};
+		AB18A29916FB35DC00CB9B5A /* sliding controller */ = {
+			isa = PBXGroup;
+			children = (
+				ABF405AD1631922B0097AD38 /* CHSlidingDemo.h */,
+				ABF405AE1631922B0097AD38 /* CHSlidingDemo.m */,
+			);
+			name = "sliding controller";
+			sourceTree = "<group>";
+		};
 		ABF40579163178300097AD38 = {
 			isa = PBXGroup;
 			children = (
@@ -113,11 +143,10 @@
 		ABF405A816318D260097AD38 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				AB18A29916FB35DC00CB9B5A /* sliding controller */,
+				AB18A29816FB35CE00CB9B5A /* right static view controller */,
+				AB18A29716FB35C500CB9B5A /* left static view controller */,
 				AB18A29216FB2D2100CB9B5A /* Default-568h@2x.png */,
-				ABF405AA16318D5B0097AD38 /* CHStaticDemo.h */,
-				ABF405AB16318D5B0097AD38 /* CHStaticDemo.m */,
-				ABF405AD1631922B0097AD38 /* CHSlidingDemo.h */,
-				ABF405AE1631922B0097AD38 /* CHSlidingDemo.m */,
 				ABF405B01631928B0097AD38 /* DemoSlideControllerSubclass.h */,
 				ABF405B11631928B0097AD38 /* DemoSlideControllerSubclass.m */,
 			);
@@ -201,6 +230,7 @@
 				ABF405AC16318D5B0097AD38 /* CHStaticDemo.m in Sources */,
 				ABF405AF1631922B0097AD38 /* CHSlidingDemo.m in Sources */,
 				ABF405B21631928B0097AD38 /* DemoSlideControllerSubclass.m in Sources */,
+				AB18A29616FB324200CB9B5A /* CHRightStaticDemo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

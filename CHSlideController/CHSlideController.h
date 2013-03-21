@@ -40,6 +40,11 @@
 -(void)slideController:(CHSlideController *)slideController willHideRightStaticController:(UIViewController *)leftStaticController;
 -(void)slideController:(CHSlideController *)slideController didHideRightStaticController:(UIViewController *)leftStaticController;
 
+-(void)slideController:(CHSlideController *)slideController willMaximizeAnimated:(BOOL)animated;
+-(void)slideController:(CHSlideController *)slideController willUnmaximizeAnimated:(BOOL)animated;
+-(void)slideControllerDidMaximize:(CHSlideController *)slideController;
+-(void)slideControllerDidUnmaximize:(CHSlideController *)slideController;
+
 @end
 
 @interface CHSlideController : UIViewController
@@ -47,7 +52,8 @@
     __weak id<CHSlideControllerDelegate> delegate;
     
     @protected
-    BOOL useFixedStaticViewWidth;       // Indicates the use of a fixed with, gets set with setStaticSlideWidth automatically
+    BOOL useFixedLeftStaticViewWidth;   // Indicates the use of a fixed with, gets set with setLeftStaticViewWidth automatically
+    BOOL useFixedRightStaticViewWidth;  // Indicates the use of a fixed with, gets set with setRightStaticViewWidth automatically
     BOOL isLeftStaticViewVisible;       // Indicates if the left static view is fully visible or not
     BOOL isRightStaticViewVisible;      // Indicates if the right static view is fully visible or not
     
@@ -94,11 +100,8 @@
 // now only sliding the leftstaticview is supported
 @property (assign, nonatomic) BOOL allowInteractiveSlideing;
 
-// the space staticview keeps visible when sliding view is shown
-@property (assign, nonatomic) NSInteger slideViewPaddingLeft; 
-
 // the space slideview keeps visible when static view is shown
-@property (assign, nonatomic) NSInteger slideViewPaddingRight;
+@property (assign, nonatomic) NSInteger slideViewVisibleWidthWhenHidden;
 
 // If set the left static view will use it as a fixed width. sets useFixedStaticViewWidth to YES
 @property (assign, nonatomic) NSInteger leftStaticViewWidth;
