@@ -98,7 +98,7 @@
 
 // If set to yes interactivly swiping the sliding view is possible. Defaults to YES
 // now only sliding the leftstaticview is supported
-@property (assign, nonatomic) BOOL allowInteractiveSlideing;
+@property (assign, nonatomic) BOOL allowInteractiveSliding;
 
 // the space slideview keeps visible when static view is shown
 @property (assign, nonatomic) NSInteger slideViewVisibleWidthWhenHidden;
