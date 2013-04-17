@@ -36,4 +36,4 @@ Backup[ ]of[ ]*.numbers/"
 #Xcode 4
 xcuserdata
 project.xcworkspace
-ABFramework-Examples/ABFramework-Examples.xcodeproj/xcuserdata/blunckalex.xcuserdatad/xcschemes/xcschememanagement.plist
+*.xcuserdatad/xcschemes/xcschememanagement.plist
