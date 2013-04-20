@@ -26,7 +26,7 @@
 // Private Interface
 #pragma mark - Private Interface
 
-@interface CHSlideController (private)
+@interface CHSlideController (private) <UIGestureRecognizerDelegate>
 
 // adds the left static viewcontrollers view as a subview of the left static view
 -(void)updateLeftStaticView;
@@ -532,6 +532,16 @@
 }
 
 ///////////////////////// Interactive Sliding - Touch handling /////////////////////////
+#pragma mark - UIGestureRecognizerDelegate
+-(BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (!self.allowInteractiveSliding || !gestureRecognizer.enabled)
+    {
+        return NO;
+    }
+    return YES;
+}
+
 #pragma mark - interactive sliding
 - (void) handlePanGesture:(UIPanGestureRecognizer *)recognizer
 {
@@ -692,6 +702,7 @@
     
     //Add gesture recognizer to slidingView
     UIPanGestureRecognizer *gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    gesture.delegate = self;
     [_slidingView addGestureRecognizer:gesture];
 }
 
