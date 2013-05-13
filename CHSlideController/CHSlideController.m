@@ -146,17 +146,17 @@
     
 
     if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+        
+        [UIView animateWithDuration:kSwipeAnimationTime delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             [self layoutForOrientation:self.interfaceOrientation];
         } completion:^(BOOL finished) {
-            // inform delegate
-            
             [self informDelegateOfShowingSlidingView];
             
             lastVisibleController = nil;
-
-            
         }];
+        
+        
+        
     }else {
         [self layoutForOrientation:self.interfaceOrientation];
 
@@ -189,7 +189,7 @@
     
 
     if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+        [UIView animateWithDuration:kSwipeAnimationTime delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             [self layoutForOrientation:self.interfaceOrientation];
         } completion:^(BOOL finished) {
             
@@ -226,7 +226,7 @@
     // TODO: refactor delegate calls
     
     if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+        [UIView animateWithDuration:kSwipeAnimationTime delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             [self layoutForOrientation:self.interfaceOrientation];
         } completion:^(BOOL finished) {
             [self informDelegateOfShowingRightStaticView];
@@ -253,7 +253,7 @@
     }
     
     if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+        [UIView animateWithDuration:kSwipeAnimationTime delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             [self layoutForOrientation:self.interfaceOrientation];
         } completion:^(BOOL finished) {
             
@@ -279,7 +279,7 @@
     }
     
     if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+        [UIView animateWithDuration:kSwipeAnimationTime delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             [self layoutForOrientation:self.interfaceOrientation];
         } completion:^(BOOL finished) {
             [self informDelegateOfUnmaximizingStaticView];
@@ -663,6 +663,8 @@
     _rightStaticView = [[UIView alloc] init];
     _slidingView = [[UIView alloc] init];
     
+    
+    
     if (_drawShadow) {
         _slidingView.layer.shadowColor = [UIColor blackColor].CGColor;
         _slidingView.layer.shadowOpacity = kSlidingViewShadowOpacity;
@@ -723,6 +725,8 @@
 
 -(void)viewWillLayoutSubviews
 {
+    [super viewWillLayoutSubviews];
+    
     [self layoutForOrientation:self.interfaceOrientation];
 }
 

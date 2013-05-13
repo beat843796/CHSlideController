@@ -26,6 +26,7 @@
     maximizeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [maximizeButton setTitle:@"Maximize" forState:UIControlStateNormal];
     [maximizeButton addTarget:self action:@selector(pressedMaximize) forControlEvents:UIControlEventTouchUpInside];
+    
     [self.view addSubview:maximizeButton];
     
     maximizeAnimatedButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -39,9 +40,10 @@
     [super viewWillLayoutSubviews];
     
     CGFloat margin = 10;
-    
+
     maximizeButton.frame = CGRectMake(margin, margin, self.view.bounds.size.width-2*margin, 44);
     maximizeAnimatedButton.frame = CGRectMake(margin, margin+maximizeButton.bounds.size.height+margin, self.view.bounds.size.width-2*margin, 44);
+
 }
 
 -(void)pressedMaximize

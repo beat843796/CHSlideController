@@ -51,16 +51,17 @@
         // finally assigning the controllers as static and sliding view controller
         // to the CHSlideController
         
+        self.view.backgroundColor = [UIColor darkGrayColor];
         
         _rightController = [[CHRightStaticDemo alloc] init];
         _rightController.delegate = self;
-        _rightController.view.backgroundColor = [UIColor darkGrayColor];
+        _rightController.view.backgroundColor = [UIColor lightGrayColor];
         
         //self.allowInteractiveSlideing = YES;
         
-        self.leftStaticViewWidth = 200;
-        self.rightStaticViewWidth = 100;
-        self.slideViewVisibleWidthWhenHidden = 50;
+        self.leftStaticViewWidth = 320-55;
+        self.rightStaticViewWidth = 320-55;
+        //self.slideViewVisibleWidthWhenHidden = 50;
         self.leftStaticViewController = _textSelectionController;
         self.rightStaticViewController = _rightController;
         self.slidingViewController = nav;
