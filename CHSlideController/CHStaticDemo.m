@@ -38,6 +38,8 @@
     [self.tableView setBackgroundView:bgView];
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"DemoCell"];
 }
 
 
@@ -59,14 +61,11 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DemoCell" forIndexPath:indexPath];
+    
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.textLabel.backgroundColor = [UIColor clearColor];
-        cell.textLabel.textColor = [UIColor whiteColor];
-
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DemoCell"];
     }
     
     // Configure the cell...
@@ -85,6 +84,8 @@
     if ([delegate respondsToSelector:@selector(staticDemoDidSelectText:)]) {
         [delegate staticDemoDidSelectText:[_data objectAtIndex:indexPath.row]];
     }
+    
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

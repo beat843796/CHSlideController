@@ -23,6 +23,8 @@
 {
     [super viewDidLoad];
     
+    self.navigationController.navigationBar.translucent = NO;
+    
     maximizeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [maximizeButton setTitle:@"Maximize" forState:UIControlStateNormal];
     [maximizeButton addTarget:self action:@selector(pressedMaximize) forControlEvents:UIControlEventTouchUpInside];
@@ -41,8 +43,8 @@
     
     CGFloat margin = 10;
 
-    maximizeButton.frame = CGRectMake(margin, margin, self.view.bounds.size.width-2*margin, 44);
-    maximizeAnimatedButton.frame = CGRectMake(margin, margin+maximizeButton.bounds.size.height+margin, self.view.bounds.size.width-2*margin, 44);
+    maximizeButton.frame = CGRectMake(margin, margin+70, self.view.bounds.size.width-2*margin, 44);
+    maximizeAnimatedButton.frame = CGRectMake(margin, margin+70+maximizeButton.bounds.size.height+margin, self.view.bounds.size.width-2*margin, 44);
 
 }
 

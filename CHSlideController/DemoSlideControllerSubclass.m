@@ -41,8 +41,8 @@
         // Adding navcontroller and barbutton
         
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_textDisplayController];
-        UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(pressedLeftButton)];
-        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(pressedRightButton)];
+        UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(pressedLeftButton)];
+        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(pressedRightButton)];
         
         _textDisplayController.navigationItem.leftBarButtonItem = button;
         _textDisplayController.navigationController.navigationBar.tintColor = [UIColor darkGrayColor];
@@ -53,18 +53,29 @@
         
         self.view.backgroundColor = [UIColor darkGrayColor];
         
+        
+        
         _rightController = [[CHRightStaticDemo alloc] init];
         _rightController.delegate = self;
         _rightController.view.backgroundColor = [UIColor lightGrayColor];
         
         //self.allowInteractiveSlideing = YES;
         
-        self.leftStaticViewWidth = 320-55;
-        self.rightStaticViewWidth = 320-55;
+        self.leftStaticViewWidth = self.view.bounds.size.width-55;
+        self.rightStaticViewWidth = self.view.bounds.size.width-55;
         //self.slideViewVisibleWidthWhenHidden = 50;
-        self.leftStaticViewController = _textSelectionController;
-        self.rightStaticViewController = _rightController;
+        
+        _textSelectionController.title = @"LEFT MENU";
+        _rightController.title = @"RIGHT MENU";
+        
+        UINavigationController *leftNav = [[UINavigationController alloc] initWithRootViewController:_textSelectionController];
+        UINavigationController *rightNav = [[UINavigationController alloc] initWithRootViewController:_rightController];
+        
+        self.leftStaticViewController = leftNav;
+        self.rightStaticViewController = rightNav;
         self.slidingViewController = nav;
+        
+        self.drawShadow = NO;
         
     }
     return self;
@@ -112,8 +123,8 @@
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
     
-    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(pressedLeftButton)];
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(pressedRightButton)];
+    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(pressedLeftButton)];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(pressedRightButton)];
     
     controller.navigationItem.rightBarButtonItem = rightButton;
     controller.navigationItem.leftBarButtonItem = button;

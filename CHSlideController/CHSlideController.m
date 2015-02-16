@@ -92,12 +92,12 @@
         
         isLeftStaticViewVisible = YES;
         isRightStaticViewVisible = NO;
-        _drawShadow = YES;
+        _drawShadow = NO;
         
         //_slideViewPaddingLeft = kDefaultSlideViewPaddingLeft;
         _slideViewVisibleWidthWhenHidden = kDefaultSlideViewPaddingRight;
         
-        _allowInteractiveSliding = YES;
+        _allowInteractiveSliding = NO;
         _isVisibleStaticViewMaximized = NO;
     }
     return self;
