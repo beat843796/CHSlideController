@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'Apache License, Version 2.0', :file => 'LICENSE' }
   s.authors       = { "Clemens Beat" => "beat84@me.com", "Alex" => "alex@ablfx.com" }
 
-  s.source       = { :git => "https://github.com/ablfx/CHSlideController.git", :tag => "v1.1" }
+  s.source       = { :git => "https://github.com/ablfx/CHSlideController.git" }
   s.platform     = :ios, '7.1'
   s.source_files = 'Classes', 'CHSlideController/CHSlideController.{h,m}'
   s.frameworks   = 'QuartzCore'
