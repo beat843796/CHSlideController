@@ -34,7 +34,7 @@
     [super viewDidLoad];
 
     UIView *bgView = [[UIView alloc] init];
-    bgView.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
+    bgView.backgroundColor = [UIColor grayColor];
     [self.tableView setBackgroundView:bgView];
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;

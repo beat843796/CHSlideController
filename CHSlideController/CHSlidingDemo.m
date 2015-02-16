@@ -22,7 +22,7 @@
     _textLabel = [[UILabel alloc] init];
     _textLabel.backgroundColor = [UIColor darkGrayColor];
     _textLabel.textColor = [UIColor lightGrayColor];
-    _textLabel.textAlignment = UITextAlignmentCenter;
+    _textLabel.textAlignment = NSTextAlignmentCenter;
     _textLabel.text = @"Select Something";
     [self.view addSubview:_textLabel];
 }
