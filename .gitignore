@@ -1,39 +1,33 @@
-# Mac OS X Finder and whatnot
+# Xcode
 .DS_Store
-
-# XCode (and ancestors) per-user config (very noisy, and not relevant)
-*.mode1
-*.mode1v3
-*.mode2v3
-*.perspective
-*.perspectivev3
-*.pbxuser
-
-
-# Generated files
-VersionX-revision.h
-
-
-# build products
+UserInterfaceState.xcuserstate
 build/
-*.[oa]
-
-# Other source repository archive directories (protects when importing)
-.hg
-.svn
-CVS
-
-
-# automatic backup files
-*~.nib
-*.swp
-*~
-*(Autosaved).rtfd/
-Backup[ ]of[ ]*.pages/
-Backup[ ]of[ ]*.key/
-Backup[ ]of[ ]*.numbers/"
-
-#Xcode 4
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.xcworkspace
+!default.xcworkspace
 xcuserdata
-project.xcworkspace
-*.xcuserdatad/xcschemes/xcschememanagement.plist
+profile
+*.moved-aside
+DerivedData
+.idea/
+
+# Pods - for those of you who use CocoaPods
+Pods/
+
+# Exclude personal Xcode user settings
+xcuserdata/
+
+# Backup files
+*~.nib
+
+####
+# Xcode 5 - VCS metadata
+#
+*.xccheckout
