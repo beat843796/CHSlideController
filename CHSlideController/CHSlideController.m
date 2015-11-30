@@ -17,7 +17,7 @@
 
 #define kDefaultSlideViewPaddingLeft 0
 #define kDefaultSlideViewPaddingRight 0
-#define kSwipeAnimationTime 0.20
+#define kSwipeAnimationTime 0.25
 #define kSlidingViewShadowOpacity 0.5
 
 
@@ -26,7 +26,35 @@
 // Private Interface
 #pragma mark - Private Interface
 
-@interface CHSlideController (private) <UIGestureRecognizerDelegate>
+typedef NS_ENUM(NSInteger, CHSlideDirection)
+{
+    CHSlideDirectionLeft = -1,
+    CHSlideDirectionRight = 1,
+};
+
+@interface CHSlideController () <UIGestureRecognizerDelegate>
+{
+    UIView *leftSafeAreaView;
+    UIView *rightSafeAreaView;
+    
+    UIPanGestureRecognizer *leftSwipe;
+    UIPanGestureRecognizer *rightSwipe;
+    
+    BOOL useFixedLeftStaticViewWidth;   // Indicates the use of a fixed with, gets set with setLeftStaticViewWidth automatically
+    BOOL useFixedRightStaticViewWidth;  // Indicates the use of a fixed with, gets set with setRightStaticViewWidth automatically
+    
+    
+    CGFloat maximizedStaticViewWidth;   // width of static view in maximized mode, its always self.bounds.width
+    
+    UIViewController *lastVisibleController;
+    
+    // Helpers for detecting swipe directions
+    NSInteger xPosStart;
+    NSInteger xPosLastSample;
+    NSInteger xPosCurrent;
+    NSInteger xPosEnd;
+    CHSlideDirection direction; // -1 = left, +1 = right, 0 = no movement
+}
 
 // adds the left static viewcontrollers view as a subview of the left static view
 -(void)updateLeftStaticView;
@@ -38,7 +66,7 @@
 -(void)updateSlidingView;
 
 // does the layouting according to the current interface orientation
--(void)layoutForOrientation:(UIInterfaceOrientation)orientation;
+-(void)layoutForOrientation;
 
 
 // delegate calls refactored
@@ -60,21 +88,7 @@
 
 @synthesize delegate;
 
-@synthesize leftStaticView = _leftStaticView;
-@synthesize rightStaticView = _rightStaticView;
-@synthesize slidingView = _slidingView;
 
-@synthesize leftStaticViewController = _leftStaticViewController;
-@synthesize rightStaticViewController = _rightStaticViewController;
-@synthesize slidingViewController = _slidingViewController;
- 
-//@synthesize slideViewPaddingLeft = _slideViewPaddingLeft;
-@synthesize slideViewVisibleWidthWhenHidden = _slideViewVisibleWidthWhenHidden;
-
-@synthesize leftStaticViewWidth = _leftStaticViewWidth;
-@synthesize rightStaticViewWidth = _rightStaticViewWidth;
-@synthesize drawShadow = _drawShadow;
-@synthesize allowInteractiveSliding = _allowInteractiveSliding;
 
 
 
@@ -83,21 +97,20 @@
 /////////////////// Initialisation //////////////////////
 #pragma mark - Initialisation
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self) {
-
+        
         // Setting up defaults
         
         isLeftStaticViewVisible = YES;
         isRightStaticViewVisible = NO;
-        _drawShadow = NO;
+        _drawShadow = YES;
         
-        //_slideViewPaddingLeft = kDefaultSlideViewPaddingLeft;
         _slideViewVisibleWidthWhenHidden = kDefaultSlideViewPaddingRight;
         
-        _allowInteractiveSliding = NO;
+        _allowEdgeSwipingForSlideingView = YES;
         _isVisibleStaticViewMaximized = NO;
     }
     return self;
@@ -113,7 +126,7 @@
 
 -(void)showSlidingViewAnimated:(BOOL)animated
 {
-
+    
     // Inform delegate of will hiding left static controller event
     if (isLeftStaticViewVisible) {
         if (delegate && [delegate respondsToSelector:@selector(slideController:willHideLeftStaticController:)]) {
@@ -130,7 +143,7 @@
     
     // Inform delegate of will showing sliding controller event
     if (delegate && [delegate respondsToSelector:@selector(slideController:willShowSlindingController:)]) {
-        [delegate slideController:self willShowSlindingController:self.slidingViewController];
+        [delegate slideController:self willShowSlindingController:_slidingViewController];
     }
     
     if (isLeftStaticViewVisible) {
@@ -144,22 +157,22 @@
     isLeftStaticViewVisible = NO;
     isRightStaticViewVisible = NO;
     
-
+    
     if (animated) {
-        
-        [UIView animateWithDuration:kSwipeAnimationTime delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-            [self layoutForOrientation:self.interfaceOrientation];
+        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+            [self layoutForOrientation];
         } completion:^(BOOL finished) {
+            // inform delegate
+            
             [self informDelegateOfShowingSlidingView];
             
             lastVisibleController = nil;
+            
+            
         }];
-        
-        
-        
     }else {
-        [self layoutForOrientation:self.interfaceOrientation];
-
+        [self layoutForOrientation];
+        
         [self informDelegateOfShowingSlidingView];
         
         lastVisibleController = nil;
@@ -187,10 +200,10 @@
     isLeftStaticViewVisible = YES;
     isRightStaticViewVisible = NO;
     
-
+    
     if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-            [self layoutForOrientation:self.interfaceOrientation];
+        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+            [self layoutForOrientation];
         } completion:^(BOOL finished) {
             
             
@@ -198,7 +211,7 @@
             
         }];
     }else {
-        [self layoutForOrientation:self.interfaceOrientation];
+        [self layoutForOrientation];
         
         [self informDelegateOfShowingLeftStaticView];
     }
@@ -226,14 +239,14 @@
     // TODO: refactor delegate calls
     
     if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-            [self layoutForOrientation:self.interfaceOrientation];
+        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+            [self layoutForOrientation];
         } completion:^(BOOL finished) {
             [self informDelegateOfShowingRightStaticView];
- 
+            
         }];
     }else {
-        [self layoutForOrientation:self.interfaceOrientation];
+        [self layoutForOrientation];
         
         [self informDelegateOfShowingRightStaticView];
     }
@@ -253,15 +266,15 @@
     }
     
     if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-            [self layoutForOrientation:self.interfaceOrientation];
+        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+            [self layoutForOrientation];
         } completion:^(BOOL finished) {
             
             [self informDelegateOfMaximizingStaticView];
             
         }];
     }else {
-        [self layoutForOrientation:self.interfaceOrientation];
+        [self layoutForOrientation];
         
         [self informDelegateOfMaximizingStaticView];
     }
@@ -271,7 +284,7 @@
 // unmaximizes the visible staticview (left or right)
 -(void)unmaximizeStaticViewAnimated:(BOOL)animated
 {
-
+    
     _isVisibleStaticViewMaximized = NO;
     
     if (delegate && [delegate respondsToSelector:@selector(slideController:willUnmaximizeAnimated:)]) {
@@ -279,14 +292,14 @@
     }
     
     if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-            [self layoutForOrientation:self.interfaceOrientation];
+        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+            [self layoutForOrientation];
         } completion:^(BOOL finished) {
             [self informDelegateOfUnmaximizingStaticView];
             
         }];
     }else {
-        [self layoutForOrientation:self.interfaceOrientation];
+        [self layoutForOrientation];
         
         [self informDelegateOfUnmaximizingStaticView];
     }
@@ -314,10 +327,10 @@
     if (_leftStaticViewController == nil) {
         return;
     }
-
+    
     [self addChildViewController:_leftStaticViewController];
     [_leftStaticViewController didMoveToParentViewController:self];
-
+    
     if ([self isViewLoaded]) {
         [self updateLeftStaticView];
     }
@@ -349,7 +362,7 @@
 
 -(void)setSlidingViewController:(UIViewController *)slidingViewController
 {
-
+    
     // Doing viewcontroller containment magic
     
     [_slidingViewController willMoveToParentViewController:nil];
@@ -397,6 +410,12 @@
 }
 
 
+-(void)setAllowEdgeSwipingForSlideingView:(BOOL)allowEdgeSwiping
+{
+    leftSwipe.enabled = allowEdgeSwiping;
+    rightSwipe.enabled = allowEdgeSwiping;
+    
+}
 
 
 
@@ -435,7 +454,7 @@
     return YES;
 }
 
-- (void)layoutForOrientation:(UIInterfaceOrientation)orientation
+- (void)layoutForOrientation
 {
     
     // Setting the frames of static
@@ -446,32 +465,32 @@
         // default mode, use screenwidth for staticview width
         
         _leftStaticView.frame = CGRectMake(0, 0, self.view.bounds.size.width-_slideViewVisibleWidthWhenHidden, self.view.bounds.size.height);
-
+        
     }else {
         
         CGFloat cuttedOffLeftStaticWidth = _leftStaticViewWidth;
-
+        
         if (cuttedOffLeftStaticWidth > self.view.bounds.size.width-_slideViewVisibleWidthWhenHidden) {
             cuttedOffLeftStaticWidth = self.view.bounds.size.width-_slideViewVisibleWidthWhenHidden;
         }
-
+        
         _leftStaticView.frame = CGRectMake(0, 0, cuttedOffLeftStaticWidth, self.view.bounds.size.height);
         
     }
     
     
     if (!useFixedRightStaticViewWidth) {
-
+        
         _rightStaticView.frame = CGRectMake(_slideViewVisibleWidthWhenHidden, 0, self.view.bounds.size.width-_slideViewVisibleWidthWhenHidden, self.view.bounds.size.height);
         
     }else {
-
+        
         CGFloat cuttedOffRightStaticWidth = _rightStaticViewWidth;
-
+        
         if (cuttedOffRightStaticWidth > self.view.bounds.size.width-_slideViewVisibleWidthWhenHidden) {
             cuttedOffRightStaticWidth = self.view.bounds.size.width-_slideViewVisibleWidthWhenHidden;
         }
-
+        
         _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-cuttedOffRightStaticWidth, 0, cuttedOffRightStaticWidth, self.view.bounds.size.height);
     }
     
@@ -494,7 +513,7 @@
             rightStaticWidth = self.view.bounds.size.width;
             _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-rightStaticWidth, 0, rightStaticWidth, self.view.bounds.size.height);
         }
-
+        
     }
     
     // setting the frame of sliding view
@@ -529,13 +548,27 @@
         
     }
     
+    
+    if (!isLeftStaticViewVisible && !isRightStaticViewVisible) {
+        leftSafeAreaView.frame = CGRectMake(0, 0, 15, _slidingView.bounds.size.height);
+        rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-15, 0, 15, self.view.bounds.size.height);
+    }else {
+        leftSafeAreaView.frame = CGRectMake(0, 0, fabs(_slidingView.bounds.size.width-_leftStaticView.bounds.size.width), _slidingView.bounds.size.height);
+        rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-fabs(_slidingView.bounds.size.width-_rightStaticView.bounds.size.width), 0, fabs(_slidingView.bounds.size.width-_rightStaticView.bounds.size.width), self.view.bounds.size.height);
+    }
+    
+    
+    
+    [_slidingView bringSubviewToFront:leftSafeAreaView];
+    [_slidingView bringSubviewToFront:rightSafeAreaView];
+    
 }
 
 ///////////////////////// Interactive Sliding - Touch handling /////////////////////////
 #pragma mark - UIGestureRecognizerDelegate
--(BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    if (!self.allowInteractiveSliding || !gestureRecognizer.enabled)
+    if (!_allowEdgeSwipingForSlideingView || !gestureRecognizer.enabled)
     {
         return NO;
     }
@@ -543,7 +576,7 @@
 }
 
 #pragma mark - interactive sliding
-- (void) handlePanGesture:(UIPanGestureRecognizer *)recognizer
+-(void)handlePanGestureLeft:(UIPanGestureRecognizer *)recognizer
 {
     CGPoint touchPoint = [recognizer locationInView:self.view];
     
@@ -551,14 +584,11 @@
     {
         case UIGestureRecognizerStateBegan:
         {
-            if (!_allowInteractiveSliding) {
+            if (!_allowEdgeSwipingForSlideingView) {
                 return;
             }
             
-            if (isRightStaticViewVisible) {
-                // Swiping to right controller not implemented yet
-                return;
-            }
+            
             
             xPosStart = touchPoint.x;
             xPosLastSample = touchPoint.x;
@@ -569,24 +599,23 @@
         }
         case UIGestureRecognizerStateChanged:
         {
-            if (!_allowInteractiveSliding) {
+            if (!_allowEdgeSwipingForSlideingView) {
                 return;
             }
             
-            if (isRightStaticViewVisible) {
-                // Swiping to right controller not implemented yet
-                return;
-            }
+            
             
             xPosCurrent = touchPoint.x;
             
             // determining swipedirection based on last and current sample point
             
             if (xPosCurrent>xPosLastSample) {
-                direction = 1;
+                direction = CHSlideDirectionRight;
             }else if(xPosCurrent < xPosLastSample) {
-                direction = -1;
+                direction = CHSlideDirectionLeft;
             }
+            
+            
             
             CGRect newSlidingRect = CGRectOffset(_slidingView.frame, xPosCurrent-xPosLastSample, 0);
             
@@ -597,8 +626,8 @@
              
              */
             
-            if (newSlidingRect.origin.x < _leftStaticView.frame.origin.x) {
-                newSlidingRect.origin.x = _leftStaticView.frame.origin.x;
+            if (newSlidingRect.origin.x < 0) {
+                newSlidingRect.origin.x = 0;
             }
             
             
@@ -616,16 +645,13 @@
         }
         case UIGestureRecognizerStateEnded:
         {
-            if (!_allowInteractiveSliding) {
+            if (!_allowEdgeSwipingForSlideingView) {
                 return;
             }
             
-            if (isRightStaticViewVisible) {
-                // Swiping to right controller not implemented yet
-                return;
-            }
             
-            if (direction == 1) {
+            
+            if (direction == CHSlideDirectionRight) {
                 [self showLeftStaticView:YES];
             }else {
                 [self showSlidingViewAnimated:YES];
@@ -634,11 +660,11 @@
         }
         case UIGestureRecognizerStateCancelled:
         {
-            if (!_allowInteractiveSliding) {
+            if (!_allowEdgeSwipingForSlideingView) {
                 return;
             }
             
-            if (direction == 1) {
+            if (direction == CHSlideDirectionRight) {
                 [self showLeftStaticView:YES];
             }else {
                 [self showSlidingViewAnimated:YES];
@@ -652,17 +678,140 @@
     }
 }
 
+
+- (void) handlePanGestureRight:(UIPanGestureRecognizer *)recognizer
+{
+    CGPoint touchPoint = [recognizer locationInView:self.view];
+    
+    switch ( recognizer.state )
+    {
+        case UIGestureRecognizerStateBegan:
+        {
+            if (!_allowEdgeSwipingForSlideingView) {
+                return;
+            }
+            
+            
+            
+            xPosStart = touchPoint.x;
+            xPosLastSample = touchPoint.x;
+            
+            _leftStaticView.alpha = 0.0;
+            _rightStaticView.alpha = 1.0;
+            break;
+        }
+        case UIGestureRecognizerStateChanged:
+        {
+            if (!_allowEdgeSwipingForSlideingView) {
+                return;
+            }
+            
+            
+            
+            xPosCurrent = touchPoint.x;
+            
+            // determining swipedirection based on last and current sample point
+            
+            if (xPosCurrent>xPosLastSample) {
+                direction = CHSlideDirectionRight;
+            }else if(xPosCurrent < xPosLastSample) {
+                direction = CHSlideDirectionLeft;
+            }
+            
+            
+            
+            CGRect newSlidingRect = CGRectOffset(_slidingView.frame, xPosCurrent-xPosLastSample, 0);
+            
+            /*
+             
+             If we slided beyonf the screensize we must cut the
+             xOffset off to stop moving the sliding view
+             
+             */
+            
+            if (newSlidingRect.origin.x+newSlidingRect.size.width < _rightStaticView.frame.origin.x) {
+                newSlidingRect.origin.x = _rightStaticView.frame.origin.x-newSlidingRect.size.width;
+            }
+            
+            
+            if (newSlidingRect.origin.x+newSlidingRect.size.width > _rightStaticView.frame.origin.x+_rightStaticView.frame.size.width) {
+                newSlidingRect.origin.x = 0;
+            }
+            
+            _slidingView.frame = newSlidingRect;
+            
+            //setting the lastSamplePoint as the current one
+            
+            xPosLastSample = xPosCurrent;
+            
+            break;
+        }
+        case UIGestureRecognizerStateEnded:
+        {
+            if (!_allowEdgeSwipingForSlideingView) {
+                return;
+            }
+            
+            
+            
+            if (direction == CHSlideDirectionRight) {
+                [self showSlidingViewAnimated:YES];
+                
+            }else {
+                [self showRightStaticView:YES];
+            }
+            break;
+        }
+        case UIGestureRecognizerStateCancelled:
+        {
+            if (!_allowEdgeSwipingForSlideingView) {
+                return;
+            }
+            
+            if (direction == CHSlideDirectionRight) {
+                [self showSlidingViewAnimated:YES];
+                
+            }else {
+                [self showRightStaticView:YES];
+            }
+            break;
+        }
+        case UIGestureRecognizerStateFailed:
+            break;
+        default:
+            break;
+    }
+}
+
+
 /////////////////////// View Lifecycle ////////////////////
 #pragma mark - View Lifecycle
 
-- (void)loadView
+
+
+- (void)viewDidLoad
 {
-    [super loadView];
+    [super viewDidLoad];
     
     _leftStaticView = [[UIView alloc] init];
     _rightStaticView = [[UIView alloc] init];
     _slidingView = [[UIView alloc] init];
     
+    
+    leftSafeAreaView = [[UIView alloc] init];
+    leftSafeAreaView.backgroundColor = [UIColor redColor]; // debug
+    leftSafeAreaView.exclusiveTouch = YES;
+    [_slidingView addSubview:leftSafeAreaView];
+    
+    leftSafeAreaView.alpha = 0.25;
+    
+    
+    rightSafeAreaView = [[UIView alloc] init];
+    rightSafeAreaView.backgroundColor = [UIColor blueColor]; // debug
+    rightSafeAreaView.exclusiveTouch = YES;
+    [_slidingView addSubview:rightSafeAreaView];
+    
+    rightSafeAreaView.alpha = 0.25;
     
     
     if (_drawShadow) {
@@ -678,7 +827,7 @@
     [self.view addSubview:_leftStaticView];
     [self.view addSubview:_rightStaticView];
     [self.view addSubview:_slidingView];
-
+    
     
     if (isLeftStaticViewVisible) {
         _leftStaticView.alpha = 1.0;
@@ -688,24 +837,24 @@
         _rightStaticView.alpha = 1.0;
     }
     
-    // Debug
-    //_leftStaticView.backgroundColor = [UIColor darkGrayColor];
-    //_rightStaticView.backgroundColor = [UIColor lightGrayColor];
-    //_slidingView.backgroundColor = [UIColor grayColor];
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
+    
+    
+    //Add gesture recognizer to slidingView
+    leftSwipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGestureLeft:)];
+    leftSwipe.delegate = self;
+    leftSwipe.maximumNumberOfTouches = 1;
+    [leftSafeAreaView addGestureRecognizer:leftSwipe];
+    
+    rightSwipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGestureRight:)];
+    rightSwipe.delegate = self;
+    rightSwipe.maximumNumberOfTouches = 1;
+    [rightSafeAreaView addGestureRecognizer:rightSwipe];
+    
+    [self setAllowEdgeSwipingForSlideingView:_allowEdgeSwipingForSlideingView];
     
     [self updateLeftStaticView];
     [self updateRightStaticView];
     [self updateSlidingView];
-    
-    //Add gesture recognizer to slidingView
-    UIPanGestureRecognizer *gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-    gesture.delegate = self;
-    [_slidingView addGestureRecognizer:gesture];
 }
 
 
@@ -714,20 +863,27 @@
 {
     [super viewDidUnload];
     
+    [leftSafeAreaView removeFromSuperview];
+    [rightSafeAreaView removeFromSuperview];
+    
     [_leftStaticView removeFromSuperview];
     [_rightStaticView removeFromSuperview];
     [_slidingView removeFromSuperview];
     
+    leftSafeAreaView = nil;
+    rightSafeAreaView = nil;
+    
     _leftStaticView = nil;
     _rightStaticView = nil;
     _slidingView = nil;
+    
+    leftSwipe = nil;
+    rightSwipe = nil;
 }
 
 -(void)viewWillLayoutSubviews
 {
-    [super viewWillLayoutSubviews];
-    
-    [self layoutForOrientation:self.interfaceOrientation];
+    [self layoutForOrientation];
 }
 
 /////////////////////// Refactored delegate calls ////////////////////

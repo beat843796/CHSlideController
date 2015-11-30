@@ -20,7 +20,7 @@
     if (self) {
 
         // Create some dummy data
-        _data = [NSArray arrayWithObjects:@"Test 1",@"Test 2",@"Test 3",@"Maximize Animated",@"Maximize", nil];
+        _data = @[@"Test 1",@"Test 2",@"Test 3"];
         
     }
     return self;

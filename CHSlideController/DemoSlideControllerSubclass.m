@@ -8,7 +8,7 @@
 
 #import "DemoSlideControllerSubclass.h"
 
-@interface DemoSlideControllerSubclass (private) 
+@interface DemoSlideControllerSubclass ()
 
 -(void)pressedLeftButton;
 -(void)pressedRightButton;
@@ -56,7 +56,7 @@
         
         
         _rightController = [[CHRightStaticDemo alloc] init];
-        _rightController.delegate = self;
+
         _rightController.view.backgroundColor = [UIColor lightGrayColor];
         
         //self.allowInteractiveSlideing = YES;
@@ -69,10 +69,10 @@
         _rightController.title = @"RIGHT MENU";
         
         UINavigationController *leftNav = [[UINavigationController alloc] initWithRootViewController:_textSelectionController];
-        UINavigationController *rightNav = [[UINavigationController alloc] initWithRootViewController:_rightController];
+       
         
         self.leftStaticViewController = leftNav;
-        self.rightStaticViewController = rightNav;
+        self.rightStaticViewController = _rightController;
         self.slidingViewController = nav;
         
         self.drawShadow = NO;
@@ -87,50 +87,25 @@
 -(void)staticDemoDidSelectText:(NSString *)text
 {
     
-    UIViewController *controller;
     
     if ([text isEqualToString:@"Test 1"]) {
         
-        controller = _textDisplayController;
+
         _textDisplayController.textLabel.text = text;
         
     }else if([text isEqualToString:@"Test 2"]){
         
-        controller = [[UIViewController alloc] init];
-        controller.view.backgroundColor = [UIColor blueColor];
+
+        _textDisplayController.textLabel.text = text;
         
         
     }else if([text isEqualToString:@"Test 3"]){
-        controller = [[UIViewController alloc] init];
-        controller.view.backgroundColor = [UIColor redColor];
-        
-    }else if([text isEqualToString:@"Maximize Animated"]){
-        NSLog(@"Maximize animated");
-        
-        [self maximizeAnimated];
-        
-        
-        return;
-        
-    }else if([text isEqualToString:@"Maximize"]){
-        NSLog(@"Maximize without animation");
-        
-        [self maximize];
-        
-        return;
+
+        _textDisplayController.textLabel.text = text;
         
     }
     
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
-    
-    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(pressedLeftButton)];
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(pressedRightButton)];
-    
-    controller.navigationItem.rightBarButtonItem = rightButton;
-    controller.navigationItem.leftBarButtonItem = button;
-    controller.navigationController.navigationBar.tintColor = [UIColor darkGrayColor];
-    
-    self.slidingViewController = nav;
+
     
     [self showSlidingViewAnimated:YES];
 }
@@ -158,22 +133,6 @@
     }
 }
 
--(void)maximize
-{
-    if (self.isVisibleStaticViewMaximized) {
-        [self unmaximizeStaticViewAnimated:NO];
-    }else {
-        [self maximizeStaticViewAnimated:NO];
-    }
-}
 
--(void)maximizeAnimated
-{
-    if (self.isVisibleStaticViewMaximized) {
-        [self unmaximizeStaticViewAnimated:YES];
-    }else {
-        [self maximizeStaticViewAnimated:YES];
-    }
-}
 
 @end

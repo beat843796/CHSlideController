@@ -51,23 +51,8 @@
 {
     __weak id<CHSlideControllerDelegate> delegate;
     
-    @protected
-    BOOL useFixedLeftStaticViewWidth;   // Indicates the use of a fixed with, gets set with setLeftStaticViewWidth automatically
-    BOOL useFixedRightStaticViewWidth;  // Indicates the use of a fixed with, gets set with setRightStaticViewWidth automatically
     BOOL isLeftStaticViewVisible;       // Indicates if the left static view is fully visible or not
     BOOL isRightStaticViewVisible;      // Indicates if the right static view is fully visible or not
-    
-    CGFloat maximizedStaticViewWidth;   // width of static view in maximized mode, its always self.bounds.width
-    
-    UIViewController *lastVisibleController;
-    
-    @private
-    // Helpers for detecting swipe directions
-    NSInteger xPosStart;
-    NSInteger xPosLastSample;
-    NSInteger xPosCurrent;
-    NSInteger xPosEnd;
-    NSInteger direction; // -1 = left, +1 = right, 0 = no movement
 }
 
 @property (nonatomic, weak) id<CHSlideControllerDelegate> delegate;
@@ -98,7 +83,7 @@
 
 // If set to yes interactivly swiping the sliding view is possible. Defaults to YES
 // now only sliding the leftstaticview is supported
-@property (assign, nonatomic) BOOL allowInteractiveSliding;
+@property (assign, nonatomic) BOOL allowEdgeSwipingForSlideingView;
 
 // the space slideview keeps visible when static view is shown
 @property (assign, nonatomic) NSInteger slideViewVisibleWidthWhenHidden;

@@ -189,7 +189,7 @@
 		ABF4057B163178300097AD38 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0710;
 			};
 			buildConfigurationList = ABF4057E163178300097AD38 /* Build configuration list for PBXProject "CHSlideController" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -280,8 +280,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -319,6 +321,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -342,6 +345,7 @@
 				GCC_PREFIX_HEADER = "CHSlideController/CHSlideController-Prefix.pch";
 				INFOPLIST_FILE = "CHSlideController/CHSlideController-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "at.appingo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -354,6 +358,7 @@
 				GCC_PREFIX_HEADER = "CHSlideController/CHSlideController-Prefix.pch";
 				INFOPLIST_FILE = "CHSlideController/CHSlideController-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "at.appingo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

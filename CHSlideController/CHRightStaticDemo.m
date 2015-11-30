@@ -8,58 +8,28 @@
 
 #import "CHRightStaticDemo.h"
 
-@interface CHRightStaticDemo (private)
-
--(void)pressedMaximize;
--(void)pressedMaximizeAnimated;
-
-@end
-
 @implementation CHRightStaticDemo
-
-@synthesize delegate;
 
 -(void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.navigationController.navigationBar.translucent = NO;
+   
     
-    maximizeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [maximizeButton setTitle:@"Maximize" forState:UIControlStateNormal];
-    [maximizeButton addTarget:self action:@selector(pressedMaximize) forControlEvents:UIControlEventTouchUpInside];
+    demoLabel = [[UILabel alloc] init];
+    demoLabel.text = @"DEMO\nRight Static ViewController";
+    demoLabel.font = [UIFont boldSystemFontOfSize:16];
+    demoLabel.numberOfLines = 2;
+    demoLabel.textAlignment = NSTextAlignmentCenter;
     
-    [self.view addSubview:maximizeButton];
-    
-    maximizeAnimatedButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [maximizeAnimatedButton setTitle:@"Maximize Animated" forState:UIControlStateNormal];
-    [maximizeAnimatedButton addTarget:self action:@selector(pressedMaximizeAnimated) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:maximizeAnimatedButton];
+    [self.view addSubview:demoLabel];
 }
 
 -(void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
     
-    CGFloat margin = 10;
-
-    maximizeButton.frame = CGRectMake(margin, margin+70, self.view.bounds.size.width-2*margin, 44);
-    maximizeAnimatedButton.frame = CGRectMake(margin, margin+70+maximizeButton.bounds.size.height+margin, self.view.bounds.size.width-2*margin, 44);
-
-}
-
--(void)pressedMaximize
-{
-    if (delegate && [delegate respondsToSelector:@selector(maximize)]) {
-        [delegate maximize];
-    }
-}
-
--(void)pressedMaximizeAnimated
-{
-    if (delegate && [delegate respondsToSelector:@selector(maximizeAnimated)]) {
-        [delegate maximizeAnimated];
-    }
+    demoLabel.frame = self.view.bounds;
 }
 
 @end
