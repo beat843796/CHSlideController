@@ -30,18 +30,18 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 @interface CHSlideController () <UIGestureRecognizerDelegate>
 {
     
-    UIPanGestureRecognizer *leftSwipe;  // used for interactiv sliding
-    UIPanGestureRecognizer *rightSwipe; // used for interactiv sliding
+    UIPanGestureRecognizer *_leftSwipe;  // used for interactiv sliding
+    UIPanGestureRecognizer *_rightSwipe; // used for interactiv sliding
     
 
     
     CHSlideDirection direction; // active interactive sliding direction
     
     // Helpers for detecting swipe directions
-    NSInteger xPosStart;
-    NSInteger xPosLastSample;
-    NSInteger xPosCurrent;
-    NSInteger xPosEnd;
+    NSInteger _xPosStart;
+    NSInteger _xPosLastSample;
+    NSInteger _xPosCurrent;
+    NSInteger _xPosEnd;
     
 }
 
@@ -58,17 +58,19 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 @property (strong, nonatomic, readonly) UIView *slidingView;
 
 // adds the left static viewcontrollers view as a subview of the left static view
--(void)updateLeftStaticView;
+-(void)CH_updateLeftStaticView;
 
 // adds the right static viewcontrollers view as a subview of the right static view
--(void)updateRightStaticView;
+-(void)CH_updateRightStaticView;
 
 // adds the sliding viewcontrollers view as a subview of the sliding view
--(void)updateSlidingView;
+-(void)CH_updateSlidingView;
 
 // does the layouting according to the current interface orientation
--(void)layoutForOrientation;
+-(void)CH_layoutForOrientation;
 
+
+-(BOOL)CH_isSlidingViewVisibleOnScreen;
 
 // delegate calls refactored
 
@@ -156,7 +158,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     
     [UIView animateWithDuration:animationDuration animations:^{
-        [self layoutForOrientation];
+        [self CH_layoutForOrientation];
     } completion:^(BOOL finished) {
         if (wasLeftViewVisible) {
             [self CH_didHideLeftStaticView];
@@ -194,7 +196,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     
     [UIView animateWithDuration:animationDuration animations:^{
-        [self layoutForOrientation];
+        [self CH_layoutForOrientation];
     } completion:^(BOOL finished) {
         
         [self CH_didShowLeftStaticView];
@@ -226,7 +228,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     
     [UIView animateWithDuration:kSwipeAnimationTime animations:^{
-        [self layoutForOrientation];
+        [self CH_layoutForOrientation];
     } completion:^(BOOL finished) {
         
         [self CH_didShowRightStaticView];
@@ -263,7 +265,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     [_leftStaticViewController didMoveToParentViewController:self];
     
     if ([self isViewLoaded]) {
-        [self updateLeftStaticView];
+        [self CH_updateLeftStaticView];
     }
 }
 
@@ -287,7 +289,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     [_rightStaticViewController didMoveToParentViewController:self];
     
     if ([self isViewLoaded]) {
-        [self updateRightStaticView];
+        [self CH_updateRightStaticView];
     }
 }
 
@@ -314,7 +316,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     [_slidingViewController didMoveToParentViewController:self];
     
     if ([self isViewLoaded]) {
-        [self updateSlidingView];
+        [self CH_updateSlidingView];
     }
 }
 
@@ -364,7 +366,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     [UIView animateWithDuration:animationDuration animations:^{
         
-        [self layoutForOrientation];
+        [self CH_layoutForOrientation];
         
         // needed to smoothly animate navbar if present without jumping title and buttons
         if ([_leftStaticViewController isKindOfClass:[UINavigationController class]] && [_leftStaticViewController respondsToSelector:@selector(navigationBar)]) {
@@ -396,7 +398,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     [UIView animateWithDuration:animationDuration animations:^{
         
-        [self layoutForOrientation];
+        [self CH_layoutForOrientation];
         
         // needed to smoothly animate navbar if present without jumping title and buttons
         if ([_rightStaticViewController isKindOfClass:[UINavigationController class]] && [_rightStaticViewController respondsToSelector:@selector(navigationBar)]) {
@@ -412,8 +414,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 -(void)setAllowEdgeSwipingForSlideingView:(BOOL)allowEdgeSwiping
 {
-    leftSwipe.enabled = allowEdgeSwiping;
-    rightSwipe.enabled = allowEdgeSwiping;
+    _leftSwipe.enabled = allowEdgeSwiping;
+    _rightSwipe.enabled = allowEdgeSwiping;
     
     _leftSafeAreaView.userInteractionEnabled = allowEdgeSwiping;
     _rightSafeAreaView.userInteractionEnabled = allowEdgeSwiping;
@@ -424,20 +426,20 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 ///////////////////////// Updating Views //////////////////////////
 #pragma mark - Updating views
 
--(void)updateLeftStaticView
+-(void)CH_updateLeftStaticView
 {
     _leftStaticViewController.view.frame = _leftStaticView.bounds;
     [_leftStaticView addSubview:_leftStaticViewController.view];
 }
 
--(void)updateRightStaticView
+-(void)CH_updateRightStaticView
 {
     _rightStaticViewController.view.frame = _rightStaticView.bounds;
     [_rightStaticView addSubview:_rightStaticViewController.view];
 }
 
 
--(void)updateSlidingView
+-(void)CH_updateSlidingView
 {
     _slidingViewController.view.frame = _slidingView.bounds;
     [_slidingView addSubview:_slidingViewController.view];
@@ -457,7 +459,13 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 }
 
 
-
+-(BOOL)CH_isSlidingViewVisibleOnScreen
+{
+    
+    return CGRectIntersectsRect(self.view.window.frame, _slidingView.frame);
+    
+    
+}
 
 
 ///////////////////////// Autorotation Stuff /////////////////////////
@@ -473,10 +481,10 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 {
     [super viewWillLayoutSubviews];
     
-    [self layoutForOrientation];
+    [self CH_layoutForOrientation];
 }
 
-- (void)layoutForOrientation
+- (void)CH_layoutForOrientation
 {
     
     // Setting the frames of static
@@ -530,7 +538,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         
     }
     
-    if (_drawShadow) {
+    if (_drawShadow && [self CH_isSlidingViewVisibleOnScreen]) {
         _slidingView.layer.shadowColor = [UIColor blackColor].CGColor;
         _slidingView.layer.shadowOffset = CGSizeMake(0, 0);
         _slidingView.layer.shadowPath = [UIBezierPath bezierPathWithRect:_slidingView.bounds].CGPath;
@@ -554,7 +562,6 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     [_slidingView bringSubviewToFront:_leftSafeAreaView];
     [_slidingView bringSubviewToFront:_rightSafeAreaView];
-    
     
     
 }
@@ -608,8 +615,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             
             
             
-            xPosStart = touchPoint.x;
-            xPosLastSample = touchPoint.x;
+            _xPosStart = touchPoint.x;
+            _xPosLastSample = touchPoint.x;
             
             _leftStaticView.alpha = 1.0;
             _rightStaticView.alpha = 0.0;
@@ -623,19 +630,19 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             
             
             
-            xPosCurrent = touchPoint.x;
+            _xPosCurrent = touchPoint.x;
             
             // determining swipedirection based on last and current sample point
             
-            if (xPosCurrent>xPosLastSample) {
+            if (_xPosCurrent>_xPosLastSample) {
                 direction = CHSlideDirectionRight;
-            }else if(xPosCurrent < xPosLastSample) {
+            }else if(_xPosCurrent < _xPosLastSample) {
                 direction = CHSlideDirectionLeft;
             }
             
             
             
-            CGRect newSlidingRect = CGRectOffset(_slidingView.frame, xPosCurrent-xPosLastSample, 0);
+            CGRect newSlidingRect = CGRectOffset(_slidingView.frame, _xPosCurrent-_xPosLastSample, 0);
             
             /*
              
@@ -656,14 +663,14 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             _slidingView.frame = newSlidingRect;
             
             if (_animateLeftStaticViewWhenSliding) {
-                _leftStaticView.frame = CGRectOffset(_leftStaticView.frame, (xPosCurrent-xPosLastSample)*kAnimatedOffsetFactor, 0);
+                _leftStaticView.frame = CGRectOffset(_leftStaticView.frame, (_xPosCurrent-_xPosLastSample)*kAnimatedOffsetFactor, 0);
             }
             
             
             
             //setting the lastSamplePoint as the current one
             
-            xPosLastSample = xPosCurrent;
+            _xPosLastSample = _xPosCurrent;
             
             break;
         }
@@ -717,8 +724,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             
             
             
-            xPosStart = touchPoint.x;
-            xPosLastSample = touchPoint.x;
+            _xPosStart = touchPoint.x;
+            _xPosLastSample = touchPoint.x;
             
             _leftStaticView.alpha = 0.0;
             _rightStaticView.alpha = 1.0;
@@ -732,19 +739,19 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             
             
             
-            xPosCurrent = touchPoint.x;
+            _xPosCurrent = touchPoint.x;
             
             // determining swipedirection based on last and current sample point
             
-            if (xPosCurrent>xPosLastSample) {
+            if (_xPosCurrent>_xPosLastSample) {
                 direction = CHSlideDirectionRight;
-            }else if(xPosCurrent < xPosLastSample) {
+            }else if(_xPosCurrent < _xPosLastSample) {
                 direction = CHSlideDirectionLeft;
             }
             
             
             
-            CGRect newSlidingRect = CGRectOffset(_slidingView.frame, xPosCurrent-xPosLastSample, 0);
+            CGRect newSlidingRect = CGRectOffset(_slidingView.frame, _xPosCurrent-_xPosLastSample, 0);
             
             /*
              
@@ -765,12 +772,12 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             _slidingView.frame = newSlidingRect;
             
             if (_animateRightStaticViewWhenSliding) {
-                _rightStaticView.frame = CGRectOffset(_rightStaticView.frame, (xPosCurrent-xPosLastSample)*kAnimatedOffsetFactor, 0);
+                _rightStaticView.frame = CGRectOffset(_rightStaticView.frame, (_xPosCurrent-_xPosLastSample)*kAnimatedOffsetFactor, 0);
             }
             
             //setting the lastSamplePoint as the current one
             
-            xPosLastSample = xPosCurrent;
+            _xPosLastSample = _xPosCurrent;
             
             break;
         }
@@ -827,7 +834,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     
     _leftSafeAreaView = [[UIView alloc] init];
-    _leftSafeAreaView.backgroundColor = [UIColor redColor]; // debug
+    //_leftSafeAreaView.backgroundColor = [UIColor redColor]; // debug
     _leftSafeAreaView.exclusiveTouch = YES;
     //[_slidingView addSubview:_leftSafeAreaView];
     
@@ -835,7 +842,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     
     _rightSafeAreaView = [[UIView alloc] init];
-    _rightSafeAreaView.backgroundColor = [UIColor blueColor]; // debug
+    //_rightSafeAreaView.backgroundColor = [UIColor blueColor]; // debug
     _rightSafeAreaView.exclusiveTouch = YES;
     //[_slidingView addSubview:_rightSafeAreaView];
     
@@ -860,21 +867,21 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     
     //Add gesture recognizer to slidingView
-    leftSwipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGestureLeft:)];
-    leftSwipe.delegate = self;
-    leftSwipe.maximumNumberOfTouches = 1;
-    [_leftSafeAreaView addGestureRecognizer:leftSwipe];
+    _leftSwipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGestureLeft:)];
+    _leftSwipe.delegate = self;
+    _leftSwipe.maximumNumberOfTouches = 1;
+    [_leftSafeAreaView addGestureRecognizer:_leftSwipe];
     
-    rightSwipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGestureRight:)];
-    rightSwipe.delegate = self;
-    rightSwipe.maximumNumberOfTouches = 1;
-    [_rightSafeAreaView addGestureRecognizer:rightSwipe];
+    _rightSwipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGestureRight:)];
+    _rightSwipe.delegate = self;
+    _rightSwipe.maximumNumberOfTouches = 1;
+    [_rightSafeAreaView addGestureRecognizer:_rightSwipe];
     
     [self setAllowEdgeSwipingForSlideingView:_allowEdgeSwipingForSlideingView];
     
-    [self updateLeftStaticView];
-    [self updateRightStaticView];
-    [self updateSlidingView];
+    [self CH_updateLeftStaticView];
+    [self CH_updateRightStaticView];
+    [self CH_updateSlidingView];
 }
 
 
@@ -897,8 +904,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     _rightStaticView = nil;
     _slidingView = nil;
     
-    leftSwipe = nil;
-    rightSwipe = nil;
+    _leftSwipe = nil;
+    _rightSwipe = nil;
 }
 
 
@@ -999,23 +1006,6 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     }
 }
 
-/*
- -(void)informDelegateOfMaximizingStaticView
- {
- // inform delegate
- if (delegate && [delegate respondsToSelector:@selector(slideControllerDidMaximize:)]) {
- [delegate slideControllerDidMaximize:self];
- }
- }
- 
- -(void)informDelegateOfUnmaximizingStaticView
- {
- // inform delegate
- 
- if (delegate && [delegate respondsToSelector:@selector(slideControllerDidUnmaximize:)]) {
- [delegate slideControllerDidUnmaximize:self];
- }
- }
- */
+
 
 @end
