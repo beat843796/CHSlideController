@@ -5,9 +5,9 @@ CHSlideController
 ![Pod License](https://img.shields.io/cocoapods/l/CHSlideController.svg?style=flat)
 ![Pod Platform](https://img.shields.io/cocoapods/p/CHSlideController.svg?style=flat)
 
-![Alt text](/Screenshots/sc1.png "Screenshot 1")
-![Alt text](/Screenshots/sc2.png "Screenshot 2")
-![Alt text](/Screenshots/sc3.png "Screenshot 3")
+![Alt text](Screenshots/sc1.png "Screenshot 1")
+![Alt text](Screenshots/sc2.png "Screenshot 2")
+![Alt text](Screenshots/sc3.png "Screenshot 3")
 
 About
 ---------
