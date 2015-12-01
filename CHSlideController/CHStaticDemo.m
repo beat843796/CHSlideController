@@ -20,7 +20,7 @@
     if (self) {
 
         // Create some dummy data
-        _data = @[@"Test 1",@"Test 2",@"Test 3"];
+        _data = @[@"Test 1",@"Test 2",@"Test 3",@"Hide Statusbar",@"Hide Navigationbar", @"Shadow ON/OFF"];
         
     }
     return self;

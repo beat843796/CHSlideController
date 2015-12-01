@@ -23,7 +23,7 @@
     _textLabel.backgroundColor = [UIColor darkGrayColor];
     _textLabel.textColor = [UIColor lightGrayColor];
     _textLabel.textAlignment = NSTextAlignmentCenter;
-    _textLabel.text = @"Select Something";
+    _textLabel.text = @"Select something from left menu";
     [self.view addSubview:_textLabel];
 }
 

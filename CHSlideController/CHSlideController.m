@@ -9,22 +9,14 @@
 #import "CHSlideController.h"
 #import <QuartzCore/QuartzCore.h>
 
-
-
-
 // Defining some defaults being set in the init
 #pragma mark - Constants
 
-#define kDefaultSlideViewPaddingLeft 0
-#define kDefaultSlideViewPaddingRight 0
-#define kSwipeAnimationTime 0.25
-#define kSlidingViewShadowOpacity 0.5
-
-
-
-
-// Private Interface
-#pragma mark - Private Interface
+#define kDefaultSlideViewPaddingLeft 0.0f
+#define kDefaultSlideViewPaddingRight 0.0f
+#define kSwipeAnimationTime 0.25f
+#define kSlidingViewShadowOpacity 0.5f
+#define kSlidingViewShadowRadius 4.0f
 
 typedef NS_ENUM(NSInteger, CHSlideDirection)
 {
@@ -32,29 +24,39 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     CHSlideDirectionRight = 1,
 };
 
+
+// Private Interface
+#pragma mark - Private Interface
 @interface CHSlideController () <UIGestureRecognizerDelegate>
 {
-    UIView *leftSafeAreaView;
-    UIView *rightSafeAreaView;
     
-    UIPanGestureRecognizer *leftSwipe;
-    UIPanGestureRecognizer *rightSwipe;
+    UIPanGestureRecognizer *leftSwipe;  // used for interactiv sliding
+    UIPanGestureRecognizer *rightSwipe; // used for interactiv sliding
     
     BOOL useFixedLeftStaticViewWidth;   // Indicates the use of a fixed with, gets set with setLeftStaticViewWidth automatically
     BOOL useFixedRightStaticViewWidth;  // Indicates the use of a fixed with, gets set with setRightStaticViewWidth automatically
     
-    
-    CGFloat maximizedStaticViewWidth;   // width of static view in maximized mode, its always self.bounds.width
-    
-    UIViewController *lastVisibleController;
+    CHSlideDirection direction; // active interactive sliding direction
     
     // Helpers for detecting swipe directions
     NSInteger xPosStart;
     NSInteger xPosLastSample;
     NSInteger xPosCurrent;
     NSInteger xPosEnd;
-    CHSlideDirection direction; // -1 = left, +1 = right, 0 = no movement
+    
 }
+
+@property (nonatomic, strong) UIView *leftSafeAreaView;
+@property (nonatomic, strong) UIView *rightSafeAreaView;
+
+// On that view the left staticcontrollers view gets added as a subview
+@property (strong, nonatomic, readonly) UIView *leftStaticView;
+
+// On that view the right staticcontrollers view gets added as a subview
+@property (strong, nonatomic, readonly) UIView *rightStaticView;
+
+// On that view the slidingcontrollers view gets added as a subview
+@property (strong, nonatomic, readonly) UIView *slidingView;
 
 // adds the left static viewcontrollers view as a subview of the left static view
 -(void)updateLeftStaticView;
@@ -70,16 +72,24 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 
 // delegate calls refactored
--(void)informDelegateOfShowingSlidingView;
--(void)informDelegateOfShowingLeftStaticView;
--(void)informDelegateOfShowingRightStaticView;
--(void)informDelegateOfMaximizingStaticView;
--(void)informDelegateOfUnmaximizingStaticView;
+
+-(void)CH_willShowSlidingView;
+-(void)CH_willShowLeftStaticView;
+-(void)CH_willShowRightStaticView;
+
+-(void)CH_didShowSlidingView;
+-(void)CH_didShowLeftStaticView;
+-(void)CH_didShowRightStaticView;
+
+-(void)CH_willHideSlidingView;
+-(void)CH_willHideLeftStaticView;
+-(void)CH_willHideRightStaticView;
+
+-(void)CH_didHideSlidingView;
+-(void)CH_didHideLeftStaticView;
+-(void)CH_didHideRightStaticView;
+
 @end
-
-
-
-
 
 /////////////////// Implementation //////////////////////
 #pragma mark - Implementation
@@ -87,12 +97,6 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 @implementation CHSlideController
 
 @synthesize delegate;
-
-
-
-
-
-
 
 /////////////////// Initialisation //////////////////////
 #pragma mark - Initialisation
@@ -111,12 +115,10 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         _slideViewVisibleWidthWhenHidden = kDefaultSlideViewPaddingRight;
         
         _allowEdgeSwipingForSlideingView = YES;
-        _isVisibleStaticViewMaximized = NO;
+        
     }
     return self;
 }
-
-
 
 
 
@@ -127,58 +129,48 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 -(void)showSlidingViewAnimated:(BOOL)animated
 {
     
-    // Inform delegate of will hiding left static controller event
-    if (isLeftStaticViewVisible) {
-        if (delegate && [delegate respondsToSelector:@selector(slideController:willHideLeftStaticController:)]) {
-            [delegate slideController:self willHideLeftStaticController:_leftStaticViewController];
-        }
-    }
+    [self CH_willShowSlidingView];
     
-    // Inform delegate of will hiding right static controller event
-    if (isRightStaticViewVisible) {
-        if (delegate && [delegate respondsToSelector:@selector(slideController:willHideRightStaticController:)]) {
-            [delegate slideController:self willHideLeftStaticController:_rightStaticViewController];
-        }
-    }
-    
-    // Inform delegate of will showing sliding controller event
-    if (delegate && [delegate respondsToSelector:@selector(slideController:willShowSlindingController:)]) {
-        [delegate slideController:self willShowSlindingController:_slidingViewController];
-    }
+    BOOL wasLeftViewVisible = NO;
+    BOOL wasRightViewVisible = NO;
     
     if (isLeftStaticViewVisible) {
-        lastVisibleController = _leftStaticViewController;
+        [self CH_willHideLeftStaticView];
+        wasLeftViewVisible = YES;
     }
     
+    
     if (isRightStaticViewVisible) {
-        lastVisibleController = _rightStaticViewController;
+        [self CH_willHideRightStaticView];
+        wasRightViewVisible = YES;
     }
     
     isLeftStaticViewVisible = NO;
     isRightStaticViewVisible = NO;
     
+    NSTimeInterval animationDuration = 0;
     
     if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
-            [self layoutForOrientation];
-        } completion:^(BOOL finished) {
-            // inform delegate
-            
-            [self informDelegateOfShowingSlidingView];
-            
-            lastVisibleController = nil;
-            
-            
-        }];
-    }else {
-        [self layoutForOrientation];
-        
-        [self informDelegateOfShowingSlidingView];
-        
-        lastVisibleController = nil;
+        animationDuration = kSwipeAnimationTime;
     }
+    
+    
+    [UIView animateWithDuration:animationDuration animations:^{
+        [self layoutForOrientation];
+    } completion:^(BOOL finished) {
+        if (wasLeftViewVisible) {
+            [self CH_didHideLeftStaticView];
+        }
+        
+        
+        if (wasRightViewVisible) {
+            [self CH_didHideRightStaticView];
+        }
+        
+        [self CH_didShowSlidingView];
+    }];
+    
 }
-
 
 
 -(void)showLeftStaticView:(BOOL)animated
@@ -187,35 +179,32 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     _leftStaticView.alpha = 1.0;
     _rightStaticView.alpha = 0.0;
     
-    // Inform delegate of will showing left static controller
-    if (delegate && [delegate respondsToSelector:@selector(slideController:willShowLeftStaticController:)]) {
-        [delegate slideController:self willShowLeftStaticController:_leftStaticViewController];
-    }
     
-    // Inform delegate of will hiding sliding controller event
-    if (delegate && [delegate respondsToSelector:@selector(slideController:willHideSlindingController:)]) {
-        [delegate slideController:self willHideSlindingController:self.slidingViewController];
-    }
+    [self CH_willHideSlidingView];
+    [self CH_willShowLeftStaticView];
     
     isLeftStaticViewVisible = YES;
     isRightStaticViewVisible = NO;
     
+    NSTimeInterval animationDuration = 0;
     
     if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
-            [self layoutForOrientation];
-        } completion:^(BOOL finished) {
-            
-            
-            [self informDelegateOfShowingLeftStaticView];
-            
-        }];
-    }else {
-        [self layoutForOrientation];
-        
-        [self informDelegateOfShowingLeftStaticView];
+        animationDuration = kSwipeAnimationTime;
     }
+    
+    
+    [UIView animateWithDuration:animationDuration animations:^{
+        [self layoutForOrientation];
+    } completion:^(BOOL finished) {
+        
+        [self CH_didShowLeftStaticView];
+        [self CH_didHideSlidingView];
+        
+    }];
+    
 }
+
+
 
 -(void)showRightStaticView:(BOOL)animated
 {
@@ -223,89 +212,87 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     _leftStaticView.alpha = 0.0;
     _rightStaticView.alpha = 1.0;
     
-    // Inform delegate of will showing right static controller
-    if (delegate && [delegate respondsToSelector:@selector(slideController:willShowRightStaticController:)]) {
-        [delegate slideController:self willShowRightStaticController:_leftStaticViewController];
-    }
-    
-    // Inform delegate of will hiding sliding controller
-    if (delegate && [delegate respondsToSelector:@selector(slideController:willHideSlindingController:)]) {
-        [delegate slideController:self willHideSlindingController:self.slidingViewController];
-    }
+    [self CH_willHideSlidingView];
+    [self CH_willShowRightStaticView];
     
     isLeftStaticViewVisible = NO;
     isRightStaticViewVisible = YES;
     
-    // TODO: refactor delegate calls
+    NSTimeInterval animationDuration = 0;
     
     if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
-            [self layoutForOrientation];
-        } completion:^(BOOL finished) {
-            [self informDelegateOfShowingRightStaticView];
-            
-        }];
-    }else {
-        [self layoutForOrientation];
-        
-        [self informDelegateOfShowingRightStaticView];
+        animationDuration = kSwipeAnimationTime;
     }
+    
+    
+    [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+        [self layoutForOrientation];
+    } completion:^(BOOL finished) {
+        
+        [self CH_didShowRightStaticView];
+        [self CH_didHideSlidingView];
+        
+    }];
+    
 }
+
+
 
 
 // maximizes the visible staticview (left or right)
--(void)maximizeStaticViewAnimated:(BOOL)animated
-{
-    
-    _isVisibleStaticViewMaximized = YES;
-    
-    
-    // inform delegate
-    if (delegate && [delegate respondsToSelector:@selector(slideController:willMaximizeAnimated:)]) {
-        [delegate slideController:self willMaximizeAnimated:animated];
-    }
-    
-    if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
-            [self layoutForOrientation];
-        } completion:^(BOOL finished) {
-            
-            [self informDelegateOfMaximizingStaticView];
-            
-        }];
-    }else {
-        [self layoutForOrientation];
-        
-        [self informDelegateOfMaximizingStaticView];
-    }
-    
-}
-
-// unmaximizes the visible staticview (left or right)
--(void)unmaximizeStaticViewAnimated:(BOOL)animated
-{
-    
-    _isVisibleStaticViewMaximized = NO;
-    
-    if (delegate && [delegate respondsToSelector:@selector(slideController:willUnmaximizeAnimated:)]) {
-        [delegate slideController:self willUnmaximizeAnimated:animated];
-    }
-    
-    if (animated) {
-        [UIView animateWithDuration:kSwipeAnimationTime animations:^{
-            [self layoutForOrientation];
-        } completion:^(BOOL finished) {
-            [self informDelegateOfUnmaximizingStaticView];
-            
-        }];
-    }else {
-        [self layoutForOrientation];
-        
-        [self informDelegateOfUnmaximizingStaticView];
-    }
-}
-
-
+/*
+ -(void)maximizeStaticViewAnimated:(BOOL)animated
+ {
+ 
+ _isVisibleStaticViewMaximized = YES;
+ 
+ 
+ // inform delegate
+ if (delegate && [delegate respondsToSelector:@selector(slideController:willMaximizeAnimated:)]) {
+ [delegate slideController:self willMaximizeAnimated:animated];
+ }
+ 
+ if (animated) {
+ [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+ [self layoutForOrientation];
+ } completion:^(BOOL finished) {
+ 
+ [self informDelegateOfMaximizingStaticView];
+ 
+ }];
+ }else {
+ [self layoutForOrientation];
+ 
+ [self informDelegateOfMaximizingStaticView];
+ }
+ 
+ }
+ 
+ // unmaximizes the visible staticview (left or right)
+ -(void)unmaximizeStaticViewAnimated:(BOOL)animated
+ {
+ 
+ _isVisibleStaticViewMaximized = NO;
+ 
+ if (delegate && [delegate respondsToSelector:@selector(slideController:willUnmaximizeAnimated:)]) {
+ [delegate slideController:self willUnmaximizeAnimated:animated];
+ }
+ 
+ if (animated) {
+ [UIView animateWithDuration:kSwipeAnimationTime animations:^{
+ [self layoutForOrientation];
+ } completion:^(BOOL finished) {
+ [self informDelegateOfUnmaximizingStaticView];
+ 
+ }];
+ }else {
+ [self layoutForOrientation];
+ 
+ [self informDelegateOfUnmaximizingStaticView];
+ }
+ }
+ 
+ */
 
 
 
@@ -367,6 +354,9 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     [_slidingViewController willMoveToParentViewController:nil];
     [_slidingViewController removeFromParentViewController];
+    
+    [_leftSafeAreaView removeFromSuperview];
+    [_rightSafeAreaView removeFromSuperview];
     
     [_slidingViewController.view removeFromSuperview];
     
@@ -439,6 +429,19 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 {
     _slidingViewController.view.frame = _slidingView.bounds;
     [_slidingView addSubview:_slidingViewController.view];
+    
+    [_slidingViewController.view addSubview:_leftSafeAreaView];
+    [_slidingViewController.view addSubview:_rightSafeAreaView];
+
+    
+    // if sliding viewcontroller is a navigationcontroller make sure that the navigationbar
+    // is always on top of safeAreaViews that are needed for swipe gesture recognition for
+    // interactive sliding of the slidingview.
+    
+    if ([_slidingViewController isKindOfClass:[UINavigationController class]] && [_slidingViewController respondsToSelector:@selector(navigationBar)]) {
+        [_slidingViewController.view bringSubviewToFront:[(UINavigationController *)_slidingViewController navigationBar]];
+    }
+    
 }
 
 
@@ -452,6 +455,13 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 {
     // Return YES for supported orientations
     return YES;
+}
+
+-(void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    
+    [self layoutForOrientation];
 }
 
 - (void)layoutForOrientation
@@ -499,23 +509,6 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     CGFloat rightStaticWidth = _rightStaticView.bounds.size.width;
     CGFloat slidingWidth = self.view.bounds.size.width;
     
-    
-    // new feature of maximizing visible static view
-    
-    if (_isVisibleStaticViewMaximized) {
-        
-        if (isLeftStaticViewVisible) {
-            leftStaticWidth = self.view.bounds.size.width;
-            _leftStaticView.frame = CGRectMake(0, 0, leftStaticWidth, self.view.bounds.size.height);
-        }
-        
-        if (isRightStaticViewVisible) {
-            rightStaticWidth = self.view.bounds.size.width;
-            _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-rightStaticWidth, 0, rightStaticWidth, self.view.bounds.size.height);
-        }
-        
-    }
-    
     // setting the frame of sliding view
     
     if (isLeftStaticViewVisible) {
@@ -535,32 +528,42 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         _slidingView.frame = CGRectMake(0, 0, slidingWidth, self.view.bounds.size.height);
     }
     
+    
     if (_drawShadow) {
-        
+        _slidingView.layer.shadowColor = [UIColor blackColor].CGColor;
+        _slidingView.layer.shadowOffset = CGSizeMake(0, 0);
         _slidingView.layer.shadowPath = [UIBezierPath bezierPathWithRect:_slidingView.bounds].CGPath;
+        _slidingView.layer.shadowRadius = kSlidingViewShadowRadius;
+        _slidingView.layer.shadowOpacity = kSlidingViewShadowOpacity;
         
-        if (!_isVisibleStaticViewMaximized) {
-            _slidingView.layer.shadowOpacity = kSlidingViewShadowOpacity;
-        }else {
-            _slidingView.layer.shadowOpacity = 0.0;
-        }
-        
-        
+    }else {
+        _slidingView.layer.shadowOpacity = 0.0;
     }
     
     
     if (!isLeftStaticViewVisible && !isRightStaticViewVisible) {
-        leftSafeAreaView.frame = CGRectMake(0, 0, 15, _slidingView.bounds.size.height);
-        rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-15, 0, 15, self.view.bounds.size.height);
+        _leftSafeAreaView.frame = CGRectMake(0, 0, 15, _slidingView.bounds.size.height);
+        _rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-15, 0, 15, self.view.bounds.size.height);
     }else {
-        leftSafeAreaView.frame = CGRectMake(0, 0, fabs(_slidingView.bounds.size.width-_leftStaticView.bounds.size.width), _slidingView.bounds.size.height);
-        rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-fabs(_slidingView.bounds.size.width-_rightStaticView.bounds.size.width), 0, fabs(_slidingView.bounds.size.width-_rightStaticView.bounds.size.width), self.view.bounds.size.height);
+        _leftSafeAreaView.frame = CGRectMake(0, 0, fabs(_slidingView.bounds.size.width-_leftStaticView.bounds.size.width), _slidingView.bounds.size.height);
+        _rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-fabs(_slidingView.bounds.size.width-_rightStaticView.bounds.size.width), 0, fabs(_slidingView.bounds.size.width-_rightStaticView.bounds.size.width), self.view.bounds.size.height);
     }
     
     
     
-    [_slidingView bringSubviewToFront:leftSafeAreaView];
-    [_slidingView bringSubviewToFront:rightSafeAreaView];
+    [_slidingView bringSubviewToFront:_leftSafeAreaView];
+    [_slidingView bringSubviewToFront:_rightSafeAreaView];
+    
+    
+    
+}
+
+// overriden
+-(void)setDrawShadow:(BOOL)drawShadow
+{
+    _drawShadow = drawShadow;
+    
+    [self.view setNeedsLayout];
     
 }
 
@@ -636,6 +639,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             }
             
             _slidingView.frame = newSlidingRect;
+            
+            //_leftStaticView.frame = CGRectOffset(_leftStaticView.frame, (xPosCurrent-xPosLastSample)*0.25f, 0);
             
             //setting the lastSamplePoint as the current one
             
@@ -798,30 +803,22 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     _slidingView = [[UIView alloc] init];
     
     
-    leftSafeAreaView = [[UIView alloc] init];
-    leftSafeAreaView.backgroundColor = [UIColor redColor]; // debug
-    leftSafeAreaView.exclusiveTouch = YES;
-    [_slidingView addSubview:leftSafeAreaView];
+    _leftSafeAreaView = [[UIView alloc] init];
+    _leftSafeAreaView.backgroundColor = [UIColor redColor]; // debug
+    _leftSafeAreaView.exclusiveTouch = YES;
+    //[_slidingView addSubview:_leftSafeAreaView];
     
-    leftSafeAreaView.alpha = 0.25;
-    
-    
-    rightSafeAreaView = [[UIView alloc] init];
-    rightSafeAreaView.backgroundColor = [UIColor blueColor]; // debug
-    rightSafeAreaView.exclusiveTouch = YES;
-    [_slidingView addSubview:rightSafeAreaView];
-    
-    rightSafeAreaView.alpha = 0.25;
+    _leftSafeAreaView.alpha = 0.25;
     
     
-    if (_drawShadow) {
-        _slidingView.layer.shadowColor = [UIColor blackColor].CGColor;
-        _slidingView.layer.shadowOpacity = kSlidingViewShadowOpacity;
-        _slidingView.layer.shadowOffset = CGSizeMake(0, 0);
-        
-        _slidingView.layer.shadowRadius = 10.0;
-    }
+    _rightSafeAreaView = [[UIView alloc] init];
+    _rightSafeAreaView.backgroundColor = [UIColor blueColor]; // debug
+    _rightSafeAreaView.exclusiveTouch = YES;
+    //[_slidingView addSubview:_rightSafeAreaView];
     
+    _rightSafeAreaView.alpha = 0.25;
+    
+
     
     
     [self.view addSubview:_leftStaticView];
@@ -843,12 +840,12 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     leftSwipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGestureLeft:)];
     leftSwipe.delegate = self;
     leftSwipe.maximumNumberOfTouches = 1;
-    [leftSafeAreaView addGestureRecognizer:leftSwipe];
+    [_leftSafeAreaView addGestureRecognizer:leftSwipe];
     
     rightSwipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGestureRight:)];
     rightSwipe.delegate = self;
     rightSwipe.maximumNumberOfTouches = 1;
-    [rightSafeAreaView addGestureRecognizer:rightSwipe];
+    [_rightSafeAreaView addGestureRecognizer:rightSwipe];
     
     [self setAllowEdgeSwipingForSlideingView:_allowEdgeSwipingForSlideingView];
     
@@ -863,15 +860,15 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 {
     [super viewDidUnload];
     
-    [leftSafeAreaView removeFromSuperview];
-    [rightSafeAreaView removeFromSuperview];
+    [_leftSafeAreaView removeFromSuperview];
+    [_rightSafeAreaView removeFromSuperview];
     
     [_leftStaticView removeFromSuperview];
     [_rightStaticView removeFromSuperview];
     [_slidingView removeFromSuperview];
     
-    leftSafeAreaView = nil;
-    rightSafeAreaView = nil;
+    _leftSafeAreaView = nil;
+    _rightSafeAreaView = nil;
     
     _leftStaticView = nil;
     _rightStaticView = nil;
@@ -881,83 +878,121 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     rightSwipe = nil;
 }
 
--(void)viewWillLayoutSubviews
-{
-    [self layoutForOrientation];
-}
+
 
 /////////////////////// Refactored delegate calls ////////////////////
 #pragma mark - Refactored delegate calls
 
--(void)informDelegateOfShowingSlidingView
+
+// will show
+
+-(void)CH_willShowSlidingView
 {
-    // inform delegate
-    
-    // Inform delegate of did showing sliding controller event
+    if (delegate && [delegate respondsToSelector:@selector(slideController:willShowSlindingController:)]) {
+        [delegate slideController:self willShowSlindingController:self.slidingViewController];
+    }
+}
+
+-(void)CH_willShowLeftStaticView
+{
+    if (delegate && [delegate respondsToSelector:@selector(slideController:willShowLeftStaticController:)]) {
+        [delegate slideController:self willShowLeftStaticController:self.leftStaticViewController];
+    }
+}
+
+-(void)CH_willShowRightStaticView
+{
+    if (delegate && [delegate respondsToSelector:@selector(slideController:willShowRightStaticController:)]) {
+        [delegate slideController:self willShowRightStaticController:self.rightStaticViewController];
+    }
+}
+
+// did show
+
+-(void)CH_didShowSlidingView
+{
     if (delegate && [delegate respondsToSelector:@selector(slideController:didShowSlindingController:)]) {
         [delegate slideController:self didShowSlindingController:self.slidingViewController];
     }
-    
-    // Inform delegate of did hiding left static controller event
-    
-    if (lastVisibleController == _leftStaticViewController) {
-        if (delegate && [delegate respondsToSelector:@selector(slideController:didHideLeftStaticController:)]) {
-            [delegate slideController:self didHideLeftStaticController:_leftStaticViewController];
-        }
-    }
-    
-    // Inform delegate of did hiding right static controller event
-    
-    if (lastVisibleController == _rightStaticViewController) {
-        if (delegate && [delegate respondsToSelector:@selector(slideController:didHideRightStaticController:)]) {
-            [delegate slideController:self didHideRightStaticController:_rightStaticViewController];
-        }
-    }
 }
 
--(void)informDelegateOfShowingLeftStaticView
+-(void)CH_didShowLeftStaticView
 {
-    // inform delegate
-    
-    // Inform delegate of did hiding sliding controller
-    if (delegate && [delegate respondsToSelector:@selector(slideController:didHideSlindingController:)]) {
-        [delegate slideController:self didHideSlindingController:self.slidingViewController];
-    }
-    
-    // Inform delegate of did showing left static controller
     if (delegate && [delegate respondsToSelector:@selector(slideController:didShowLeftStaticController:)]) {
-        [delegate slideController:self didShowLeftStaticController:_leftStaticViewController];
+        [delegate slideController:self didShowLeftStaticController:self.leftStaticViewController];
     }
 }
 
--(void)informDelegateOfShowingRightStaticView
+-(void)CH_didShowRightStaticView
 {
-    // Inform delegate of did hide sliding controller
+    if (delegate && [delegate respondsToSelector:@selector(slideController:didShowRightStaticController:)]) {
+        [delegate slideController:self didShowRightStaticController:self.leftStaticViewController];
+    }
+}
+
+// will hide
+
+-(void)CH_willHideSlidingView
+{
+    if (delegate && [delegate respondsToSelector:@selector(slideController:willHideSlindingController:)]) {
+        [delegate slideController:self willHideSlindingController:self.slidingViewController];
+    }
+}
+
+-(void)CH_willHideLeftStaticView
+{
+    if (delegate && [delegate respondsToSelector:@selector(slideController:willHideLeftStaticController:)]) {
+        [delegate slideController:self willHideLeftStaticController:self.leftStaticViewController];
+    }
+}
+
+-(void)CH_willHideRightStaticView
+{
+    if (delegate && [delegate respondsToSelector:@selector(slideController:willHideRightStaticController:)]) {
+        [delegate slideController:self willHideRightStaticController:self.rightStaticViewController];
+    }
+}
+
+// did hide
+
+-(void)CH_didHideSlidingView
+{
     if (delegate && [delegate respondsToSelector:@selector(slideController:didHideSlindingController:)]) {
         [delegate slideController:self didHideSlindingController:self.slidingViewController];
     }
-    
-    // Inform delegate of did showing left static controller
-    if (delegate && [delegate respondsToSelector:@selector(slideController:didShowRightStaticController:)]) {
-        [delegate slideController:self didShowRightStaticController:_leftStaticViewController];
+}
+
+-(void)CH_didHideLeftStaticView
+{
+    if (delegate && [delegate respondsToSelector:@selector(slideController:didHideLeftStaticController:)]) {
+        [delegate slideController:self didHideLeftStaticController:self.leftStaticViewController];
     }
 }
 
--(void)informDelegateOfMaximizingStaticView
+-(void)CH_didHideRightStaticView
 {
-    // inform delegate
-    if (delegate && [delegate respondsToSelector:@selector(slideControllerDidMaximize:)]) {
-        [delegate slideControllerDidMaximize:self];
+    if (delegate && [delegate respondsToSelector:@selector(slideController:didHideRightStaticController:)]) {
+        [delegate slideController:self didHideRightStaticController:self.rightStaticViewController];
     }
 }
 
--(void)informDelegateOfUnmaximizingStaticView
-{
-    // inform delegate
-    
-    if (delegate && [delegate respondsToSelector:@selector(slideControllerDidUnmaximize:)]) {
-        [delegate slideControllerDidUnmaximize:self];
-    }
-}
+/*
+ -(void)informDelegateOfMaximizingStaticView
+ {
+ // inform delegate
+ if (delegate && [delegate respondsToSelector:@selector(slideControllerDidMaximize:)]) {
+ [delegate slideControllerDidMaximize:self];
+ }
+ }
+ 
+ -(void)informDelegateOfUnmaximizingStaticView
+ {
+ // inform delegate
+ 
+ if (delegate && [delegate respondsToSelector:@selector(slideControllerDidUnmaximize:)]) {
+ [delegate slideControllerDidUnmaximize:self];
+ }
+ }
+ */
 
 @end

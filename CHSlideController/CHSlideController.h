@@ -40,10 +40,10 @@
 -(void)slideController:(CHSlideController *)slideController willHideRightStaticController:(UIViewController *)leftStaticController;
 -(void)slideController:(CHSlideController *)slideController didHideRightStaticController:(UIViewController *)leftStaticController;
 
--(void)slideController:(CHSlideController *)slideController willMaximizeAnimated:(BOOL)animated;
--(void)slideController:(CHSlideController *)slideController willUnmaximizeAnimated:(BOOL)animated;
--(void)slideControllerDidMaximize:(CHSlideController *)slideController;
--(void)slideControllerDidUnmaximize:(CHSlideController *)slideController;
+//-(void)slideController:(CHSlideController *)slideController willMaximizeAnimated:(BOOL)animated;
+//-(void)slideController:(CHSlideController *)slideController willUnmaximizeAnimated:(BOOL)animated;
+//-(void)slideControllerDidMaximize:(CHSlideController *)slideController;
+//-(void)slideControllerDidUnmaximize:(CHSlideController *)slideController;
 
 @end
 
@@ -57,14 +57,6 @@
 
 @property (nonatomic, weak) id<CHSlideControllerDelegate> delegate;
 
-// On that view the left staticcontrollers view gets added as a subview
-@property (strong, nonatomic, readonly) UIView *leftStaticView;
-
-// On that view the right staticcontrollers view gets added as a subview
-@property (strong, nonatomic, readonly) UIView *rightStaticView;
-
-// On that view the slidingcontrollers view gets added as a subview
-@property (strong, nonatomic, readonly) UIView *slidingView;
 
 // The Static Controller that does not move on the left side
 @property (strong, nonatomic) UIViewController *leftStaticViewController;
@@ -79,10 +71,9 @@
 @property (assign, nonatomic) BOOL drawShadow;
 
 // indicator if the visible static view is maximized or not, defaults to no
-@property (nonatomic, readonly) BOOL isVisibleStaticViewMaximized;
+//@property (nonatomic, readonly) BOOL isVisibleStaticViewMaximized;
 
 // If set to yes interactivly swiping the sliding view is possible. Defaults to YES
-// now only sliding the leftstaticview is supported
 @property (assign, nonatomic) BOOL allowEdgeSwipingForSlideingView;
 
 // the space slideview keeps visible when static view is shown
@@ -104,9 +95,9 @@
 -(void)showRightStaticView:(BOOL)animated;
 
 // maximizes the visible staticview (left or right)
--(void)maximizeStaticViewAnimated:(BOOL)animated;
+//-(void)maximizeStaticViewAnimated:(BOOL)animated;
 
 // unmaximizes the visible staticview (left or right)
--(void)unmaximizeStaticViewAnimated:(BOOL)animated;
+//-(void)unmaximizeStaticViewAnimated:(BOOL)animated;
 
 @end

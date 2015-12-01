@@ -169,7 +169,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = ABF4059C163178300097AD38 /* Build configuration list for PBXNativeTarget "CHSlideController" */;
 			buildPhases = (
-				ABD9B5051A9247500069BE42 /* ShellScript */,
+				ABD9B5051A9247500069BE42 /* Increment Build Number Script */,
 				ABF40580163178300097AD38 /* Sources */,
 				ABF40581163178300097AD38 /* Frameworks */,
 				ABF40582163178300097AD38 /* Resources */,
@@ -221,18 +221,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		ABD9B5051A9247500069BE42 /* ShellScript */ = {
+		ABD9B5051A9247500069BE42 /* Increment Build Number Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Increment Build Number Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "#!/bin/bash\n\n#use git revision number\n\n# set -o errexit\n# set -o nounset\n\n# INFO_PLIST=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info\"\n\n# Use the latest version tag for CFBundleShortVersionString. I tag releases\n# in Git using the format v0.0.0; this assumes you're doing the same.\n#SHORT_VERSION=$(git --git-dir=\"${PROJECT_DIR}/.git\" --work-tree=\"${PROJECT_DIR}\" describe --dirty | sed -e 's/^v//' -e 's/g//')\n\n# I'd like to use the Git commit hash for CFBundleVersion.\n# VERSION=$(git --git-dir=\"${PROJECT_DIR}/.git\" --work-tree=\"${PROJECT_DIR}\" rev-parse --short HEAD)\n\n# But Apple wants this value to be a monotonically increasing integer, so\n# instead use the number of commits on the master branch. If you like to\n# play fast and loose with your Git history, this may cause you problems.\n# Thanks to @amrox for pointing out the issue and fix.\n# VERSION=$(git --git-dir=\"${PROJECT_DIR}/.git\" --work-tree=\"${PROJECT_DIR}\" rev-list master | wc -l)\n\n#defaults write $INFO_PLIST CFBundleShortVersionString $SHORT_VERSION\n# defaults write $INFO_PLIST CFBundleVersion $VERSION\n\n\n## use auto incremented build number\n\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\n#buildNumber=$((0x$buildNumber))\nbuildNumber=$(($buildNumber + 1))\n#buildNumber=$(printf \"%X\" $buildNumber)\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"\n";
+			shellScript = "#!/bin/bash\n\n## use auto incremented build number\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\n#buildNumber=$((0x$buildNumber))\nbuildNumber=$(($buildNumber + 1))\n#buildNumber=$(printf \"%X\" $buildNumber)\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

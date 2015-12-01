@@ -27,10 +27,9 @@
     if (self) {
         
         // Creating the controllers
-        
         _textDisplayController = [[CHSlidingDemo alloc] init];
-        _textDisplayController.title = @"Details";
-        
+        _textDisplayController.title = @"Sliding controller";
+
         _textSelectionController = [[CHStaticDemo alloc] init];
 
         
@@ -65,17 +64,17 @@
         self.rightStaticViewWidth = self.view.bounds.size.width-55;
         //self.slideViewVisibleWidthWhenHidden = 50;
         
-        _textSelectionController.title = @"LEFT MENU";
-        _rightController.title = @"RIGHT MENU";
+        _textSelectionController.title = @"Left static controller";
+
         
         UINavigationController *leftNav = [[UINavigationController alloc] initWithRootViewController:_textSelectionController];
        
-        
+        // Assign the controllers
         self.leftStaticViewController = leftNav;
         self.rightStaticViewController = _rightController;
         self.slidingViewController = nav;
         
-        self.drawShadow = NO;
+
         
     }
     return self;
@@ -92,22 +91,34 @@
         
 
         _textDisplayController.textLabel.text = text;
-        
+        [self showSlidingViewAnimated:YES];
     }else if([text isEqualToString:@"Test 2"]){
         
 
         _textDisplayController.textLabel.text = text;
-        
+        [self showSlidingViewAnimated:YES];
         
     }else if([text isEqualToString:@"Test 3"]){
 
         _textDisplayController.textLabel.text = text;
+        [self showSlidingViewAnimated:YES];
+    }else if([text isEqualToString:@"Hide Navigationbar"]) {
         
+        
+       [_textDisplayController.navigationController setNavigationBarHidden:!_textDisplayController.navigationController.isNavigationBarHidden animated:YES];
+        
+    }else if([text isEqualToString:@"Hide Statusbar"]) {
+        
+        [[UIApplication sharedApplication] setStatusBarHidden:![UIApplication sharedApplication].isStatusBarHidden withAnimation:UIStatusBarAnimationSlide];
+        
+    }else if([text isEqualToString:@"Shadow ON/OFF"]) {
+        self.drawShadow = !self.drawShadow;
     }
     
 
+   // [self.view setNeedsLayout];
     
-    [self showSlidingViewAnimated:YES];
+    
 }
 
 -(void)pressedLeftButton
