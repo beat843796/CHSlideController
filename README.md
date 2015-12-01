@@ -5,7 +5,9 @@ CHSlideController
 ![Pod License](https://img.shields.io/cocoapods/l/CHSlideController.svg?style=flat)
 ![Pod Platform](https://img.shields.io/cocoapods/p/CHSlideController.svg?style=flat)
 
-![Alt text](/badge.jpeg "Screenshot")
+![Alt text](/Screenshots/sc1.jpeg "Screenshot 1")
+![Alt text](/Screenshots/sc2.jpeg "Screenshot 2")
+![Alt text](/Screenshots/sc3.jpeg "Screenshot 3")
 
 About
 ---------
@@ -77,6 +79,3 @@ CHSlideController uses the MIT License:
 >The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 >THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Credits
----------
