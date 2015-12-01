@@ -68,7 +68,7 @@ What to Expect in Future Updates
 
 License
 --------
-_CHSlideController uses the MIT License:
+CHSlideController uses the MIT License:
 
 >Copyright (c) 2013, Mainloop LLC
 
