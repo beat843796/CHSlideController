@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "CHSlideController"
-  s.version      = "1.2"
+  s.version      = "2.0"
   s.description  = "A View controller that contains 2 static non moving UIViewControllers and 1 swipeable UIViewController that can cover the static ones."
   s.homepage     = "https://github.com/beat843796/CHSlideController"
   s.license      = 'MIT'

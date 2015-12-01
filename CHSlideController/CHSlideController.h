@@ -40,11 +40,6 @@
 -(void)slideController:(CHSlideController *)slideController willHideRightStaticController:(UIViewController *)leftStaticController;
 -(void)slideController:(CHSlideController *)slideController didHideRightStaticController:(UIViewController *)leftStaticController;
 
-//-(void)slideController:(CHSlideController *)slideController willMaximizeAnimated:(BOOL)animated;
-//-(void)slideController:(CHSlideController *)slideController willUnmaximizeAnimated:(BOOL)animated;
-//-(void)slideControllerDidMaximize:(CHSlideController *)slideController;
-//-(void)slideControllerDidUnmaximize:(CHSlideController *)slideController;
-
 @end
 
 @interface CHSlideController : UIViewController
@@ -55,49 +50,84 @@
     BOOL isRightStaticViewVisible;      // Indicates if the right static view is fully visible or not
 }
 
+/**
+ *  The CHSlideController delegate
+ */
 @property (nonatomic, weak) id<CHSlideControllerDelegate> delegate;
 
-
-// The Static Controller that does not move on the left side
+/**
+ *  The Static Controller that does not move on the left side
+ */
 @property (strong, nonatomic) UIViewController *leftStaticViewController;
 
-// The Static Controller that does not move on the right side
+/**
+ *  The Static Controller that does not move on the right side
+ */
 @property (strong, nonatomic) UIViewController *rightStaticViewController;
 
-// The sliding controller that covers the staticcontroller and is moving left/right
+/**
+ *  The sliding controller that covers the staticcontroller and is moving left/right
+ */
 @property (strong, nonatomic) UIViewController *slidingViewController;
 
-// If set to yes a shadow will be drawn under the slidingView. Defaults to YES
+/**
+ *  If set to yes a shadow will be drawn under the slidingView. Defaults to YES
+ */
 @property (assign, nonatomic) BOOL drawShadow;
 
-// indicator if the visible static view is maximized or not, defaults to no
-//@property (nonatomic, readonly) BOOL isVisibleStaticViewMaximized;
 
-// If set to yes interactivly swiping the sliding view is possible. Defaults to YES
+/**
+ *  If set to yes interactivly swiping the sliding view is possible. Defaults to YES
+ */
 @property (assign, nonatomic) BOOL allowEdgeSwipingForSlideingView;
 
-// the space slideview keeps visible when static view is shown
-@property (assign, nonatomic) NSInteger slideViewVisibleWidthWhenHidden;
+/**
+ *  the space slideview keeps visible when static view is shown
+ */
+//@property (assign, nonatomic) NSInteger slideViewVisibleWidthWhenHidden;
 
-// If set the left static view will use it as a fixed width. sets useFixedStaticViewWidth to YES
-@property (assign, nonatomic) NSInteger leftStaticViewWidth;
+/**
+ *  If set the left static view will use it as a fixed width. sets useFixedStaticViewWidth to YES
+ */
+@property (assign, nonatomic) CGFloat leftStaticViewWidth;
 
-// If set the right static view will use it as a fixed width. sets useFixedStaticViewWidth to YES
-@property (assign, nonatomic) NSInteger rightStaticViewWidth;
+/**
+ *  If set the right static view will use it as a fixed width. sets useFixedStaticViewWidth to YES
+ */
+@property (assign, nonatomic) CGFloat rightStaticViewWidth;
 
-// Animates the Sliding View in
+/**
+ *  Animates the left static view when sliding view is moved
+ */
+@property (assign, nonatomic) BOOL animateLeftStaticViewWhenSliding;
+
+/**
+ *  Animates the right static view when sliding view is moved
+ */
+@property (assign, nonatomic) BOOL animateRightStaticViewWhenSliding;
+
+/**
+ *  Animates the Sliding View in
+ *
+ *  @param animated YES if transition should be animated, otherwise NO
+ */
 -(void)showSlidingViewAnimated:(BOOL)animated;
 
-// Animated the Sliding View out to the right
+/**
+ *  Animates the Sliding View out, shows the left static view
+ *
+ *  @param animated YES if transition should be animated, otherwise NO
+ */
 -(void)showLeftStaticView:(BOOL)animated;
 
-// Animted the Sliding View out to the left
+/**
+ *  Animates the Sliding View out, shows the right static view
+ *
+ *  @param animated YES if transition should be animated, otherwise NO
+ */
 -(void)showRightStaticView:(BOOL)animated;
 
-// maximizes the visible staticview (left or right)
-//-(void)maximizeStaticViewAnimated:(BOOL)animated;
-
-// unmaximizes the visible staticview (left or right)
-//-(void)unmaximizeStaticViewAnimated:(BOOL)animated;
+-(void)setLeftStaticViewWidth:(CGFloat)leftStaticViewWidth animated:(BOOL)animated;
+-(void)setRightStaticViewWidth:(CGFloat)rightStaticViewWidth animated:(BOOL)animated;
 
 @end

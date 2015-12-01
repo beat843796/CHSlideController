@@ -9,7 +9,9 @@
 #import "DemoSlideControllerSubclass.h"
 
 @interface DemoSlideControllerSubclass ()
-
+{
+    BOOL maximizedLeftView;
+}
 -(void)pressedLeftButton;
 -(void)pressedRightButton;
 
@@ -64,6 +66,9 @@
         self.rightStaticViewWidth = self.view.bounds.size.width-55;
         //self.slideViewVisibleWidthWhenHidden = 50;
         
+        self.animateLeftStaticViewWhenSliding = YES;
+        self.animateRightStaticViewWhenSliding = YES;
+        
         _textSelectionController.title = @"Left static controller";
 
         
@@ -113,6 +118,20 @@
         
     }else if([text isEqualToString:@"Shadow ON/OFF"]) {
         self.drawShadow = !self.drawShadow;
+    }else if([text isEqualToString:@"Change Width"]) {
+        
+        maximizedLeftView = !maximizedLeftView;
+        
+        if (maximizedLeftView) {
+            [self setLeftStaticViewWidth:self.view.bounds.size.width animated:YES];
+        }else {
+            [self setLeftStaticViewWidth:self.view.bounds.size.width-55 animated:YES];
+
+            
+        }
+        
+        
+        
     }
     
 

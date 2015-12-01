@@ -12,11 +12,11 @@
 // Defining some defaults being set in the init
 #pragma mark - Constants
 
-#define kDefaultSlideViewPaddingLeft 0.0f
-#define kDefaultSlideViewPaddingRight 0.0f
-#define kSwipeAnimationTime 0.25f
+
+#define kSwipeAnimationTime 0.3f
 #define kSlidingViewShadowOpacity 0.5f
 #define kSlidingViewShadowRadius 4.0f
+#define kAnimatedOffsetFactor 0.25f
 
 typedef NS_ENUM(NSInteger, CHSlideDirection)
 {
@@ -33,8 +33,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     UIPanGestureRecognizer *leftSwipe;  // used for interactiv sliding
     UIPanGestureRecognizer *rightSwipe; // used for interactiv sliding
     
-    BOOL useFixedLeftStaticViewWidth;   // Indicates the use of a fixed with, gets set with setLeftStaticViewWidth automatically
-    BOOL useFixedRightStaticViewWidth;  // Indicates the use of a fixed with, gets set with setRightStaticViewWidth automatically
+
     
     CHSlideDirection direction; // active interactive sliding direction
     
@@ -112,9 +111,10 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         isRightStaticViewVisible = NO;
         _drawShadow = YES;
         
-        _slideViewVisibleWidthWhenHidden = kDefaultSlideViewPaddingRight;
-        
         _allowEdgeSwipingForSlideingView = YES;
+        
+        _animateLeftStaticViewWhenSliding = NO;
+        _animateRightStaticViewWhenSliding = NO;
         
     }
     return self;
@@ -239,62 +239,6 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 
 
-// maximizes the visible staticview (left or right)
-/*
- -(void)maximizeStaticViewAnimated:(BOOL)animated
- {
- 
- _isVisibleStaticViewMaximized = YES;
- 
- 
- // inform delegate
- if (delegate && [delegate respondsToSelector:@selector(slideController:willMaximizeAnimated:)]) {
- [delegate slideController:self willMaximizeAnimated:animated];
- }
- 
- if (animated) {
- [UIView animateWithDuration:kSwipeAnimationTime animations:^{
- [self layoutForOrientation];
- } completion:^(BOOL finished) {
- 
- [self informDelegateOfMaximizingStaticView];
- 
- }];
- }else {
- [self layoutForOrientation];
- 
- [self informDelegateOfMaximizingStaticView];
- }
- 
- }
- 
- // unmaximizes the visible staticview (left or right)
- -(void)unmaximizeStaticViewAnimated:(BOOL)animated
- {
- 
- _isVisibleStaticViewMaximized = NO;
- 
- if (delegate && [delegate respondsToSelector:@selector(slideController:willUnmaximizeAnimated:)]) {
- [delegate slideController:self willUnmaximizeAnimated:animated];
- }
- 
- if (animated) {
- [UIView animateWithDuration:kSwipeAnimationTime animations:^{
- [self layoutForOrientation];
- } completion:^(BOOL finished) {
- [self informDelegateOfUnmaximizingStaticView];
- 
- }];
- }else {
- [self layoutForOrientation];
- 
- [self informDelegateOfUnmaximizingStaticView];
- }
- }
- 
- */
-
-
 
 /////////////////////// Override Setter Properties ////////////////////
 #pragma mark - Setter Methods
@@ -374,7 +318,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     }
 }
 
--(void)setLeftStaticViewWidth:(NSInteger)staticViewWidth
+-(void)setLeftStaticViewWidth:(CGFloat)staticViewWidth
 {
     
     if (staticViewWidth <= 0) {
@@ -382,12 +326,13 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         return;
     }
     
-    useFixedLeftStaticViewWidth = YES;
     _leftStaticViewWidth = staticViewWidth;
+    
+    [self.view setNeedsLayout];
     
 }
 
--(void)setRightStaticViewWidth:(NSInteger)rightStaticViewWidth
+-(void)setRightStaticViewWidth:(CGFloat)rightStaticViewWidth
 {
     
     if (rightStaticViewWidth <= 0) {
@@ -395,8 +340,73 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         return;
     }
     
-    useFixedRightStaticViewWidth = YES;
     _rightStaticViewWidth = rightStaticViewWidth;
+    
+    [self.view setNeedsLayout];
+}
+
+
+-(void)setLeftStaticViewWidth:(CGFloat)leftStaticViewWidth animated:(BOOL)animated
+{
+    if (leftStaticViewWidth <= 0) {
+        NSLog(@"Warning: Left static view width must not be <= 0");
+        return;
+    }
+    
+    NSTimeInterval animationDuration = 0;
+    
+    if (animated) {
+        animationDuration = kSwipeAnimationTime;
+    }
+    
+    _leftStaticViewWidth = leftStaticViewWidth;
+    
+    
+    [UIView animateWithDuration:animationDuration animations:^{
+        
+        [self layoutForOrientation];
+        
+        // needed to smoothly animate navbar if present without jumping title and buttons
+        if ([_leftStaticViewController isKindOfClass:[UINavigationController class]] && [_leftStaticViewController respondsToSelector:@selector(navigationBar)]) {
+            
+            CGRect navBarRect = [(UINavigationController *)_leftStaticViewController navigationBar].frame;
+
+            [[(UINavigationController *)_leftStaticViewController navigationBar] setFrame:CGRectMake(navBarRect.origin.x, navBarRect.origin.y, _leftStaticViewWidth, navBarRect.size.height)];
+            [[(UINavigationController *)_leftStaticViewController navigationBar] layoutSubviews];
+        }
+        
+        
+    }];
+}
+
+-(void)setRightStaticViewWidth:(CGFloat)rightStaticViewWidth animated:(BOOL)animated
+{
+    if (rightStaticViewWidth <= 0) {
+        NSLog(@"Warning: Right static view width must not be <= 0");
+        return;
+    }
+    
+    NSTimeInterval animationDuration = 0;
+    
+    if (animated) {
+        animationDuration = kSwipeAnimationTime;
+    }
+    
+    _rightStaticViewWidth = rightStaticViewWidth;
+    
+    [UIView animateWithDuration:animationDuration animations:^{
+        
+        [self layoutForOrientation];
+        
+        // needed to smoothly animate navbar if present without jumping title and buttons
+        if ([_rightStaticViewController isKindOfClass:[UINavigationController class]] && [_rightStaticViewController respondsToSelector:@selector(navigationBar)]) {
+            
+            CGRect navBarRect = [(UINavigationController *)_rightStaticViewController navigationBar].frame;
+            
+            [[(UINavigationController *)_rightStaticViewController navigationBar] setFrame:CGRectMake(navBarRect.origin.x, navBarRect.origin.y, _rightStaticViewWidth, navBarRect.size.height)];
+            [[(UINavigationController *)_rightStaticViewController navigationBar] layoutSubviews];
+        }
+    }];
 }
 
 
@@ -405,6 +415,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     leftSwipe.enabled = allowEdgeSwiping;
     rightSwipe.enabled = allowEdgeSwiping;
     
+    _leftSafeAreaView.userInteractionEnabled = allowEdgeSwiping;
+    _rightSafeAreaView.userInteractionEnabled = allowEdgeSwiping;
 }
 
 
@@ -432,7 +444,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     [_slidingViewController.view addSubview:_leftSafeAreaView];
     [_slidingViewController.view addSubview:_rightSafeAreaView];
-
+    
     
     // if sliding viewcontroller is a navigationcontroller make sure that the navigationbar
     // is always on top of safeAreaViews that are needed for swipe gesture recognition for
@@ -468,45 +480,26 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 {
     
     // Setting the frames of static
+
+    CGFloat cuttedOffLeftStaticWidth = _leftStaticViewWidth;
     
+    if (cuttedOffLeftStaticWidth > self.view.bounds.size.width) {
+        cuttedOffLeftStaticWidth = self.view.bounds.size.width;
+    }
+
+    CGFloat cuttedOffRightStaticWidth = _rightStaticViewWidth;
     
-    if (!useFixedLeftStaticViewWidth) {
-        
-        // default mode, use screenwidth for staticview width
-        
-        _leftStaticView.frame = CGRectMake(0, 0, self.view.bounds.size.width-_slideViewVisibleWidthWhenHidden, self.view.bounds.size.height);
-        
-    }else {
-        
-        CGFloat cuttedOffLeftStaticWidth = _leftStaticViewWidth;
-        
-        if (cuttedOffLeftStaticWidth > self.view.bounds.size.width-_slideViewVisibleWidthWhenHidden) {
-            cuttedOffLeftStaticWidth = self.view.bounds.size.width-_slideViewVisibleWidthWhenHidden;
-        }
-        
-        _leftStaticView.frame = CGRectMake(0, 0, cuttedOffLeftStaticWidth, self.view.bounds.size.height);
-        
+    if (cuttedOffRightStaticWidth > self.view.bounds.size.width) {
+        cuttedOffRightStaticWidth = self.view.bounds.size.width;
     }
     
-    
-    if (!useFixedRightStaticViewWidth) {
-        
-        _rightStaticView.frame = CGRectMake(_slideViewVisibleWidthWhenHidden, 0, self.view.bounds.size.width-_slideViewVisibleWidthWhenHidden, self.view.bounds.size.height);
-        
-    }else {
-        
-        CGFloat cuttedOffRightStaticWidth = _rightStaticViewWidth;
-        
-        if (cuttedOffRightStaticWidth > self.view.bounds.size.width-_slideViewVisibleWidthWhenHidden) {
-            cuttedOffRightStaticWidth = self.view.bounds.size.width-_slideViewVisibleWidthWhenHidden;
-        }
-        
-        _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-cuttedOffRightStaticWidth, 0, cuttedOffRightStaticWidth, self.view.bounds.size.height);
-    }
+
+    // setting desired frames
+    _leftStaticView.frame = CGRectMake(0, 0, cuttedOffLeftStaticWidth, self.view.bounds.size.height);
+    _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-cuttedOffRightStaticWidth, 0, cuttedOffRightStaticWidth, self.view.bounds.size.height);
     
     
     CGFloat leftStaticWidth = _leftStaticView.bounds.size.width;
-    CGFloat rightStaticWidth = _rightStaticView.bounds.size.width;
     CGFloat slidingWidth = self.view.bounds.size.width;
     
     // setting the frame of sliding view
@@ -524,10 +517,18 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     }else {
         
         // Static view is covered
-        
         _slidingView.frame = CGRectMake(0, 0, slidingWidth, self.view.bounds.size.height);
+        
+        
+        if (_animateLeftStaticViewWhenSliding) {
+            _leftStaticView.frame = CGRectMake(-1*slidingWidth*kAnimatedOffsetFactor, 0, cuttedOffLeftStaticWidth, self.view.bounds.size.height);
+        }
+        
+        if (_animateRightStaticViewWhenSliding) {
+            _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-cuttedOffRightStaticWidth+slidingWidth*kAnimatedOffsetFactor, 0, cuttedOffRightStaticWidth, self.view.bounds.size.height);
+        }
+        
     }
-    
     
     if (_drawShadow) {
         _slidingView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -565,6 +566,20 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     [self.view setNeedsLayout];
     
+}
+
+-(void)setAnimateLeftStaticViewWhenSliding:(BOOL)animateLeftStaticViewWhenSliding
+{
+    _animateLeftStaticViewWhenSliding = animateLeftStaticViewWhenSliding;
+    
+    [self.view setNeedsLayout];
+}
+
+-(void)setAnimateRightStaticViewWhenSliding:(BOOL)animateRightStaticViewWhenSliding
+{
+    _animateRightStaticViewWhenSliding = animateRightStaticViewWhenSliding;
+    
+    [self.view setNeedsLayout];
 }
 
 ///////////////////////// Interactive Sliding - Touch handling /////////////////////////
@@ -640,7 +655,11 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             
             _slidingView.frame = newSlidingRect;
             
-            //_leftStaticView.frame = CGRectOffset(_leftStaticView.frame, (xPosCurrent-xPosLastSample)*0.25f, 0);
+            if (_animateLeftStaticViewWhenSliding) {
+                _leftStaticView.frame = CGRectOffset(_leftStaticView.frame, (xPosCurrent-xPosLastSample)*kAnimatedOffsetFactor, 0);
+            }
+            
+            
             
             //setting the lastSamplePoint as the current one
             
@@ -745,6 +764,10 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             
             _slidingView.frame = newSlidingRect;
             
+            if (_animateRightStaticViewWhenSliding) {
+                _rightStaticView.frame = CGRectOffset(_rightStaticView.frame, (xPosCurrent-xPosLastSample)*kAnimatedOffsetFactor, 0);
+            }
+            
             //setting the lastSamplePoint as the current one
             
             xPosLastSample = xPosCurrent;
@@ -818,7 +841,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     _rightSafeAreaView.alpha = 0.25;
     
-
+    
     
     
     [self.view addSubview:_leftStaticView];
