@@ -36,8 +36,8 @@
 		ABF40596163178300097AD38 /* CHSlideController-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CHSlideController-Prefix.pch"; sourceTree = "<group>"; };
 		ABF40597163178300097AD38 /* CHAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CHAppDelegate.h; sourceTree = "<group>"; };
 		ABF40598163178300097AD38 /* CHAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CHAppDelegate.m; sourceTree = "<group>"; };
-		ABF4059F163178530097AD38 /* CHSlideController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHSlideController.h; sourceTree = "<group>"; };
-		ABF405A0163178530097AD38 /* CHSlideController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHSlideController.m; sourceTree = "<group>"; };
+		ABF4059F163178530097AD38 /* CHSlideController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHSlideController.h; path = CHSlideController/CHSlideController.h; sourceTree = "<group>"; };
+		ABF405A0163178530097AD38 /* CHSlideController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHSlideController.m; path = CHSlideController/CHSlideController.m; sourceTree = "<group>"; };
 		ABF405A6163187B00097AD38 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		ABF405AA16318D5B0097AD38 /* CHStaticDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHStaticDemo.h; sourceTree = "<group>"; };
 		ABF405AB16318D5B0097AD38 /* CHStaticDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHStaticDemo.m; sourceTree = "<group>"; };
