@@ -20,7 +20,16 @@
     if (self) {
 
         // Create some dummy data
-        _data = @[@"Test 1",@"Test 2",@"Test 3",@"Hide Statusbar",@"Hide Navigationbar", @"Shadow ON/OFF",@"Change Width"];
+        _data = @[@"Test 1",@"Test 2",@"Test 3",@"Hide Statusbar",@"Hide Navigationbar", @"Shadow ON/OFF",@"Change Width",@"DIM ON/OFF"];
+        
+        self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+        //self.searchController.searchResultsUpdater = self;
+        
+        self.searchController.dimsBackgroundDuringPresentation = NO;
+
+        self.definesPresentationContext = YES;
+        
+        self.tableView.tableHeaderView = self.searchController.searchBar;
         
     }
     return self;
@@ -33,6 +42,12 @@
 {
     [super viewDidLoad];
 
+    
+   
+   
+    
+    [_searchController.searchBar sizeToFit];
+    
     UIView *bgView = [[UIView alloc] init];
     bgView.backgroundColor = [UIColor grayColor];
     [self.tableView setBackgroundView:bgView];
@@ -42,6 +57,12 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"DemoCell"];
 }
 
+-(void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    
+    
+}
 
 #pragma mark - Table view data source
 
@@ -66,7 +87,11 @@
     
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DemoCell"];
+        
+
     }
+
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     // Configure the cell...
     

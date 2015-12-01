@@ -1,6 +1,6 @@
 //
 //  CHSlideController.h
-//  CHSlideController
+//  CHSlideController v2.0
 //
 //  This controller is build up using ViewController Containment
 //  and tries to mimic the Controllerstyle of the facebook app. 
@@ -75,16 +75,16 @@
  */
 @property (assign, nonatomic) BOOL drawShadow;
 
+/**
+ *  Dims the slinding view when it does not cover left or right static view entirely
+ */
+@property (assign, nonatomic) BOOL dimSlidingViewWhenNoCoveringStaticView;
+
 
 /**
  *  If set to yes interactivly swiping the sliding view is possible. Defaults to YES
  */
 @property (assign, nonatomic) BOOL allowEdgeSwipingForSlideingView;
-
-/**
- *  the space slideview keeps visible when static view is shown
- */
-//@property (assign, nonatomic) NSInteger slideViewVisibleWidthWhenHidden;
 
 /**
  *  If set the left static view will use it as a fixed width. sets useFixedStaticViewWidth to YES
@@ -129,5 +129,10 @@
 
 -(void)setLeftStaticViewWidth:(CGFloat)leftStaticViewWidth animated:(BOOL)animated;
 -(void)setRightStaticViewWidth:(CGFloat)rightStaticViewWidth animated:(BOOL)animated;
+
+-(BOOL)isLeftStaticViewMaximized;
+-(BOOL)isRightStaticViewMaximized;
+
+-(NSTimeInterval)animationTimeInterval;
 
 @end

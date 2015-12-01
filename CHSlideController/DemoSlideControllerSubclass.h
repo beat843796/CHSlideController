@@ -11,7 +11,7 @@
 #import "CHSlidingDemo.h"
 #import "CHRightStaticDemo.h"
 
-@interface DemoSlideControllerSubclass : CHSlideController <CHStaticDemoDelegate>
+@interface DemoSlideControllerSubclass : CHSlideController <CHStaticDemoDelegate, UISearchControllerDelegate, UISearchBarDelegate>
 
 // Defining the controllers we wanna display in the slide controller
 @property (nonatomic, strong) CHSlidingDemo *textDisplayController;

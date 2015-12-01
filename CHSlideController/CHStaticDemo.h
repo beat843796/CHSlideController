@@ -15,12 +15,13 @@
 
 @end
 
-@interface CHStaticDemo : UITableViewController
+@interface CHStaticDemo : UITableViewController 
 {
     __weak id<CHStaticDemoDelegate> delegate;
 }
 
 @property (nonatomic, weak) id<CHStaticDemoDelegate> delegate;
 @property (nonatomic, strong) NSArray *data;
+@property (nonatomic, strong) UISearchController *searchController;
 
 @end

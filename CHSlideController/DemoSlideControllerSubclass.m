@@ -33,8 +33,9 @@
         _textDisplayController.title = @"Sliding controller";
 
         _textSelectionController = [[CHStaticDemo alloc] init];
-
-        
+        _textSelectionController.searchController.searchBar.delegate = self;
+        _textSelectionController.searchController.delegate = self;
+        //_textSelectionController.searchController.hidesNavigationBarDuringPresentation = NO;
         // Assigning the delegate to get informed when somethin has been selected
         _textSelectionController.delegate = self;
         
@@ -85,6 +86,57 @@
     return self;
 }
 
+-(void)willPresentSearchController:(UISearchController *)searchController
+{
+    
+
+    
+
+    [UIView animateWithDuration:self.animationTimeInterval animations:^{
+        
+        //[_textSelectionController.navigationController setNavigationBarHidden:YES animated:NO];
+        [self setLeftStaticViewWidth:self.view.bounds.size.width animated:YES];
+        
+        [_textSelectionController.searchController.searchBar layoutSubviews];
+        
+
+    }];
+    
+}
+
+-(void)willDismissSearchController:(UISearchController *)searchController
+{
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+    [UIView animateWithDuration:self.animationTimeInterval animations:^{
+        
+        [_textSelectionController.navigationController setNavigationBarHidden:NO animated:NO];
+        [self setLeftStaticViewWidth:self.view.bounds.size.width-55 animated:YES];
+        
+        [_textSelectionController.searchController.searchBar layoutSubviews];
+        
+        
+    }];
+    
+    
+    
+}
+
+//-(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+//{
+//    NSLog(@"Searchbar cancel");
+//    [self setLeftStaticViewWidth:self.view.bounds.size.width-55 animated:YES];
+//}
+
+
 // Our subclass is responsible for handling events happening
 // in static and sliding controller and for showing/hiding stuff
 
@@ -132,8 +184,11 @@
         
         
         
-    }
-    
+    }else if ([text isEqualToString:@"DIM ON/OFF"]) {
+        
+        self.dimSlidingViewWhenNoCoveringStaticView = !self.dimSlidingViewWhenNoCoveringStaticView;
+        
+    }    
 
    // [self.view setNeedsLayout];
     
