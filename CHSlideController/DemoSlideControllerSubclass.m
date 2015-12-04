@@ -80,6 +80,8 @@
         self.rightStaticViewController = _rightController;
         self.slidingViewController = nav;
         
+        self.stickStatusBarToSlidingView = YES;
+
 
         
     }

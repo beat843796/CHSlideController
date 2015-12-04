@@ -106,6 +106,8 @@
  */
 @property (assign, nonatomic) BOOL animateRightStaticViewWhenSliding;
 
+@property (assign, nonatomic) BOOL stickStatusBarToSlidingView;
+
 /**
  *  Animates the Sliding View in
  *

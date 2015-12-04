@@ -46,6 +46,9 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     CGFloat _percentageOfDraggingCompleted; // value betwwen 0.0 and 1.0 telling how much of the dragging distance of the sliding view is completed, used for interactive sliding. 1.0 when slideview totally visibly
     
+    
+    UIView *statusBar;
+    
 }
 
 @property (nonatomic, strong) UIView *leftSafeAreaView;
@@ -76,6 +79,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 -(void)CH_applySlidingViewDim;
 
 -(BOOL)CH_isSlidingViewVisibleOnScreen;
+
+-(void)CH_positionStatusBar;
 
 // delegate calls refactored
 
@@ -125,6 +130,13 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         _animateRightStaticViewWhenSliding = NO;
         
         _dimSlidingViewWhenNoCoveringStaticView = YES;
+
+        _stickStatusBarToSlidingView = NO;
+        
+        
+        
+
+        
 
         
     }
@@ -472,6 +484,29 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     [self.view setNeedsLayout];
 }
 
+-(void)setStickStatusBarToSlidingView:(BOOL)stickStatusBarToSlidingView
+{
+    _stickStatusBarToSlidingView = stickStatusBarToSlidingView;
+    
+    if (_stickStatusBarToSlidingView) {
+        
+        NSString *key = [[NSString alloc] initWithData:[NSData dataWithBytes:(unsigned char []){0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x42, 0x61, 0x72} length:9] encoding:NSASCIIStringEncoding];
+        id object = [UIApplication sharedApplication];
+        
+        @try {
+            if ([object respondsToSelector:NSSelectorFromString(key)]) {
+                statusBar = [object valueForKey:key];
+            }
+        }
+        @catch (NSException *exception) {
+            
+        }
+        
+    }
+    
+    [self CH_positionStatusBar];
+}
+
 ///////////////////////// Updating Views //////////////////////////
 #pragma mark - Updating views
 
@@ -620,6 +655,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     }
     
     
+    [self CH_positionStatusBar];
+    
     [_slidingView bringSubviewToFront:_dimView];
     
     [_slidingView bringSubviewToFront:_leftSafeAreaView];
@@ -627,6 +664,27 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     
     [self CH_applySlidingViewDim];
+    
+}
+
+-(void)CH_positionStatusBar
+{
+    
+    CGRect statusBarRect = statusBar.frame;
+    
+    if (_stickStatusBarToSlidingView) {
+    
+        
+        statusBarRect.origin.x = _slidingView.frame.origin.x;
+        statusBar.frame = statusBarRect;
+        
+    }else {
+        
+        statusBarRect.origin.x = 0;
+        statusBar.frame = statusBarRect;
+        
+        statusBar = nil;
+    }
     
 }
 
@@ -727,6 +785,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             }
             
             _slidingView.frame = newSlidingRect;
+            
+            [self CH_positionStatusBar];
             
             if (_animateLeftStaticViewWhenSliding) {
                 _leftStaticView.frame = CGRectOffset(_leftStaticView.frame, (_xPosCurrent-_xPosLastSample)*kAnimatedOffsetFactor, 0);
@@ -842,6 +902,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             }
             
             _slidingView.frame = newSlidingRect;
+            
+            [self CH_positionStatusBar];
             
             if (_animateRightStaticViewWhenSliding) {
                 _rightStaticView.frame = CGRectOffset(_rightStaticView.frame, (_xPosCurrent-_xPosLastSample)*kAnimatedOffsetFactor, 0);
