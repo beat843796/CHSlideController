@@ -59,7 +59,7 @@ Cocoapods
 CocoaPods are the best way to manage library dependencies in Objective-C projects.
 Learn more at http://cocoapods.org
 
-Add this to your podfile to add the CHSlideController to your project:<br /> `pod 'CHSlideController', '~> 2.3'`
+Add this to your podfile to add the CHSlideController to your project:<br /> `pod 'CHSlideController', '~> 2.4'`
 
 
 What to Expect in Future Updates
