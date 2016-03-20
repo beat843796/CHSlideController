@@ -742,13 +742,14 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 #pragma mark - UIGestureRecognizerDelegate
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
+    BOOL shouldSlide;
     
     if ([delegate respondsToSelector:@selector(shouldSlideControllerSlide:)]) {
-        BOOL shouldSlide = [delegate shouldSlideControllerSlide:self];
+        shouldSlide = [delegate shouldSlideControllerSlide:self];
 
     }
     
-    if (!_allowEdgeSwipingForSlideingView || !gestureRecognizer.enabled || !shouldSlide)
+    if (!_allowEdgeSwipingForSlideingView || !gestureRecognizer.enabled || !shouldSlide)
     {
         return NO;
     }
