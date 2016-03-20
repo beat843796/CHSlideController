@@ -40,6 +40,8 @@
 -(void)slideController:(CHSlideController *)slideController willHideRightStaticController:(UIViewController *)leftStaticController;
 -(void)slideController:(CHSlideController *)slideController didHideRightStaticController:(UIViewController *)leftStaticController;
 
+-(BOOL)shouldSlideControllerSlide:(CHSlideController *)slideController;
+
 @end
 
 @interface CHSlideController : UIViewController
@@ -132,9 +134,9 @@
 -(void)setLeftStaticViewWidth:(CGFloat)leftStaticViewWidth animated:(BOOL)animated;
 -(void)setRightStaticViewWidth:(CGFloat)rightStaticViewWidth animated:(BOOL)animated;
 
--(BOOL)isLeftStaticViewMaximized;
--(BOOL)isRightStaticViewMaximized;
+@property (NS_NONATOMIC_IOSONLY, getter=isLeftStaticViewMaximized, readonly) BOOL leftStaticViewMaximized;
+@property (NS_NONATOMIC_IOSONLY, getter=isRightStaticViewMaximized, readonly) BOOL rightStaticViewMaximized;
 
--(NSTimeInterval)animationTimeInterval;
+@property (NS_NONATOMIC_IOSONLY, readonly) NSTimeInterval animationTimeInterval;
 
 @end

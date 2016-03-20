@@ -78,7 +78,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 -(void)CH_applySlidingViewDim;
 
--(BOOL)CH_isSlidingViewVisibleOnScreen;
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL CH_isSlidingViewVisibleOnScreen;
 
 -(void)CH_positionStatusBar;
 
@@ -417,7 +417,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         
         if ([_leftStaticViewController isKindOfClass:[UINavigationController class]] && [_leftStaticViewController respondsToSelector:@selector(navigationBar)]) {
 
-            [[(UINavigationController *)_leftStaticViewController navigationBar] layoutSubviews];
+            [((UINavigationController *)_leftStaticViewController).navigationBar layoutSubviews];
 
         }
         
@@ -453,7 +453,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         
         // needed to smoothly animate navbar if present without jumping title and buttons
         if ([_rightStaticViewController isKindOfClass:[UINavigationController class]] && [_rightStaticViewController respondsToSelector:@selector(navigationBar)]) {
-            [[(UINavigationController *)_rightStaticViewController navigationBar] layoutSubviews];
+            [((UINavigationController *)_rightStaticViewController).navigationBar layoutSubviews];
         }
     }];
 }
@@ -541,7 +541,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     if ([_slidingViewController isKindOfClass:[UINavigationController class]] && [_slidingViewController respondsToSelector:@selector(navigationBar)]) {
 
 
-        [_slidingViewController.view bringSubviewToFront:[(UINavigationController *)_slidingViewController navigationBar]];
+        [_slidingViewController.view bringSubviewToFront:((UINavigationController *)_slidingViewController).navigationBar];
         
     }
     
@@ -728,7 +728,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 -(void)handlePanGestureLeft:(UIPanGestureRecognizer *)recognizer
 {
     CGPoint touchPoint = [recognizer locationInView:self.view];
-    
+
     switch ( recognizer.state )
     {
         case UIGestureRecognizerStateBegan:
@@ -752,7 +752,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
                 return;
             }
             
-            
+            BOOL validSlide = YES;
             
             _xPosCurrent = touchPoint.x;
             
@@ -777,18 +777,23 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             
             if (newSlidingRect.origin.x < 0) {
                 newSlidingRect.origin.x = 0;
+                validSlide = NO;
             }
             
             
             if (newSlidingRect.origin.x > _leftStaticView.frame.origin.x+_leftStaticView.frame.size.width) {
-                newSlidingRect.origin.x = _leftStaticView.frame.origin.x+_leftStaticView.frame.size.width;
+                newSlidingRect.origin.x = _leftStaticViewWidth;
+                validSlide = NO;
+                _leftStaticView.frame = CGRectMake(0, 0, _leftStaticViewWidth, self.view.bounds.size.height);
+
+                
             }
             
             _slidingView.frame = newSlidingRect;
             
             [self CH_positionStatusBar];
             
-            if (_animateLeftStaticViewWhenSliding) {
+            if (_animateLeftStaticViewWhenSliding && validSlide) {
                 _leftStaticView.frame = CGRectOffset(_leftStaticView.frame, (_xPosCurrent-_xPosLastSample)*kAnimatedOffsetFactor, 0);
             }
 
@@ -869,7 +874,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
                 return;
             }
             
-            
+            BOOL validSlide = YES;
             
             _xPosCurrent = touchPoint.x;
             
@@ -894,18 +899,23 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             
             if (newSlidingRect.origin.x+newSlidingRect.size.width < _rightStaticView.frame.origin.x) {
                 newSlidingRect.origin.x = _rightStaticView.frame.origin.x-newSlidingRect.size.width;
+                _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-_rightStaticViewWidth, 0, _rightStaticViewWidth, self.view.bounds.size.height);
+                validSlide = NO;
             }
             
             
-            if (newSlidingRect.origin.x+newSlidingRect.size.width > _rightStaticView.frame.origin.x+_rightStaticView.frame.size.width) {
+            
+            
+            if (newSlidingRect.origin.x > 0) {
                 newSlidingRect.origin.x = 0;
+                validSlide = NO;
             }
             
             _slidingView.frame = newSlidingRect;
             
             [self CH_positionStatusBar];
             
-            if (_animateRightStaticViewWhenSliding) {
+            if (_animateRightStaticViewWhenSliding && validSlide) {
                 _rightStaticView.frame = CGRectOffset(_rightStaticView.frame, (_xPosCurrent-_xPosLastSample)*kAnimatedOffsetFactor, 0);
             }
             
@@ -1022,7 +1032,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     _rightSwipe.maximumNumberOfTouches = 1;
     [_rightSafeAreaView addGestureRecognizer:_rightSwipe];
     
-    [self setAllowEdgeSwipingForSlideingView:_allowEdgeSwipingForSlideingView];
+    self.allowEdgeSwipingForSlideingView = _allowEdgeSwipingForSlideingView;
     
     [self CH_updateLeftStaticView];
     [self CH_updateRightStaticView];

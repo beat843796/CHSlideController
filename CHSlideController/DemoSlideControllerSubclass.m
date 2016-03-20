@@ -23,7 +23,7 @@
 @synthesize textSelectionController = _textSelectionController;
 
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self) {
@@ -90,9 +90,7 @@
 
 -(void)willPresentSearchController:(UISearchController *)searchController
 {
-    
 
-    
 
     [UIView animateWithDuration:self.animationTimeInterval animations:^{
         
@@ -109,15 +107,6 @@
 -(void)willDismissSearchController:(UISearchController *)searchController
 {
 
-    
-
-    
-    
-    
-    
-    
-    
-    
     [UIView animateWithDuration:self.animationTimeInterval animations:^{
         
         [_textSelectionController.navigationController setNavigationBarHidden:NO animated:NO];

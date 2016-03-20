@@ -20,7 +20,7 @@
     DemoSlideControllerSubclass *root = [[DemoSlideControllerSubclass alloc] init];
     root.delegate = self;
     
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
     // setting root controller
     self.window.rootViewController = root;

@@ -14,7 +14,7 @@
 @synthesize delegate;
 @synthesize data = _data;
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (instancetype)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
     if (self) {
@@ -52,7 +52,7 @@
     
     UIView *bgView = [[UIView alloc] init];
     bgView.backgroundColor = [UIColor grayColor];
-    [self.tableView setBackgroundView:bgView];
+    (self.tableView).backgroundView = bgView;
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
@@ -79,7 +79,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [_data count];
+    return _data.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -97,7 +97,7 @@
     
     // Configure the cell...
     
-    cell.textLabel.text = [_data objectAtIndex:indexPath.row];
+    cell.textLabel.text = _data[indexPath.row];
     
     return cell;
 }
@@ -109,7 +109,7 @@
     
     // inform the delegate that something has been selected
     if ([delegate respondsToSelector:@selector(staticDemoDidSelectText:)]) {
-        [delegate staticDemoDidSelectText:[_data objectAtIndex:indexPath.row]];
+        [delegate staticDemoDidSelectText:_data[indexPath.row]];
     }
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
