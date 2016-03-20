@@ -152,6 +152,14 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 -(void)showSlidingViewAnimated:(BOOL)animated
 {
     
+    if ([delegate respondsToSelector:@selector(shouldSlideControllerSlide:)]) {
+        BOOL shouldSlide = [delegate shouldSlideControllerSlide:self];
+        
+        if (!shouldSlide) {
+            return;
+        }
+    }
+    
     [self CH_willShowSlidingView];
     
     BOOL wasLeftViewVisible = NO;
@@ -204,6 +212,15 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 -(void)showLeftStaticView:(BOOL)animated
 {
     
+    
+    if ([delegate respondsToSelector:@selector(shouldSlideControllerSlide:)]) {
+        BOOL shouldSlide = [delegate shouldSlideControllerSlide:self];
+        
+        if (!shouldSlide) {
+            return;
+        }
+    }
+    
     _leftStaticView.alpha = 1.0;
     _rightStaticView.alpha = 0.0;
     
@@ -241,6 +258,14 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 -(void)showRightStaticView:(BOOL)animated
 {
+    
+    if ([delegate respondsToSelector:@selector(shouldSlideControllerSlide:)]) {
+        BOOL shouldSlide = [delegate shouldSlideControllerSlide:self];
+        
+        if (!shouldSlide) {
+            return;
+        }
+    }
     
     _leftStaticView.alpha = 0.0;
     _rightStaticView.alpha = 1.0;
@@ -717,7 +742,13 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 #pragma mark - UIGestureRecognizerDelegate
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    if (!_allowEdgeSwipingForSlideingView || !gestureRecognizer.enabled)
+    
+    if ([delegate respondsToSelector:@selector(shouldSlideControllerSlide:)]) {
+        BOOL shouldSlide = [delegate shouldSlideControllerSlide:self];
+
+    }
+    
+    if (!_allowEdgeSwipingForSlideingView || !gestureRecognizer.enabled || !shouldSlide)
     {
         return NO;
     }
@@ -727,6 +758,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 #pragma mark - interactive sliding
 -(void)handlePanGestureLeft:(UIPanGestureRecognizer *)recognizer
 {
+
+    
     CGPoint touchPoint = [recognizer locationInView:self.view];
 
     switch ( recognizer.state )
@@ -847,8 +880,11 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 }
 
 
-- (void) handlePanGestureRight:(UIPanGestureRecognizer *)recognizer
+- (void)handlePanGestureRight:(UIPanGestureRecognizer *)recognizer
 {
+    
+
+    
     CGPoint touchPoint = [recognizer locationInView:self.view];
     
     switch ( recognizer.state )
