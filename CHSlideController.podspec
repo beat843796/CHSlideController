@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'CHSlideController'
-  s.version  = '2.4'
+  s.version  = '2.5'
   s.platform = :ios, '8.1'
   s.license  = 'MIT'
   s.summary  = 'A ViewController that manages 3 contained viewcontrollers'
