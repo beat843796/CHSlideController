@@ -63,15 +63,15 @@
         
         //self.allowInteractiveSlideing = YES;
         
-        self.leftStaticViewWidth = self.view.bounds.size.width-55;
-        self.rightStaticViewWidth = self.view.bounds.size.width-55;
+        self.leftStaticViewWidth = 320;//self.view.bounds.size.width-55;
+        self.rightStaticViewWidth = 320;//self.view.bounds.size.width-55;
         //self.slideViewVisibleWidthWhenHidden = 50;
         
         self.animateLeftStaticViewWhenSliding = YES;
         self.animateRightStaticViewWhenSliding = YES;
         
         _textSelectionController.title = @"Left static controller";
-
+        self.allowEdgeSwipingForSlideingView = YES;
         
         UINavigationController *leftNav = [[UINavigationController alloc] initWithRootViewController:_textSelectionController];
        
@@ -80,7 +80,7 @@
         self.rightStaticViewController = _rightController;
         self.slidingViewController = nav;
         
-        self.stickStatusBarToSlidingView = YES;
+       // self.stickStatusBarToSlidingView = YES;
 
 
         

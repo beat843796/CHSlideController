@@ -135,7 +135,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         
         
         
-
+        
         
 
         
@@ -675,8 +675,18 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         _leftSafeAreaView.frame = CGRectMake(0, 0, 15, _slidingView.bounds.size.height);
         _rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-15, 0, 15, self.view.bounds.size.height);
     }else {
-        _leftSafeAreaView.frame = CGRectMake(0, 0, fabs(_slidingView.bounds.size.width-_leftStaticView.bounds.size.width), _slidingView.bounds.size.height);
-        _rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-fabs(_slidingView.bounds.size.width-_rightStaticView.bounds.size.width), 0, fabs(_slidingView.bounds.size.width-_rightStaticView.bounds.size.width), self.view.bounds.size.height);
+        
+        if (isLeftStaticViewVisible) {
+            _leftSafeAreaView.frame = CGRectMake(0, 0, fabs(_slidingView.bounds.size.width-_leftStaticView.bounds.size.width), _slidingView.bounds.size.height);
+            _rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-0, 0, 0, self.view.bounds.size.height);
+        }
+        
+        if (isRightStaticViewVisible) {
+            _leftSafeAreaView.frame = CGRectMake(0, 0, 0, _slidingView.bounds.size.height);
+            _rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-fabs(_slidingView.bounds.size.width-_rightStaticView.bounds.size.width), 0, fabs(_slidingView.bounds.size.width-_rightStaticView.bounds.size.width), self.view.bounds.size.height);
+        }
+        
+        
     }
     
     
@@ -1070,6 +1080,9 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     [_rightSafeAreaView addGestureRecognizer:_rightSwipe];
     
     self.allowEdgeSwipingForSlideingView = _allowEdgeSwipingForSlideingView;
+    
+    _leftSafeAreaView.backgroundColor = [UIColor blueColor];
+    _rightSafeAreaView.backgroundColor = [UIColor redColor];
     
     [self CH_updateLeftStaticView];
     [self CH_updateRightStaticView];
