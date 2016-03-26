@@ -1140,9 +1140,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     self.allowEdgeSwipingForSlideingView = _allowEdgeSwipingForSlideingView;
     
-    _leftSafeAreaView.backgroundColor = [UIColor blueColor];
-    _rightSafeAreaView.backgroundColor = [UIColor redColor];
-    
+ 
     [self CH_updateLeftStaticView];
     [self CH_updateRightStaticView];
     [self CH_updateSlidingView];
