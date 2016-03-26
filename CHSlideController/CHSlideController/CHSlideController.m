@@ -16,7 +16,8 @@
 #define kSwipeAnimationTime 0.3f
 #define kSlidingViewShadowOpacity 0.5f
 #define kSlidingViewShadowRadius 4.0f
-#define kAnimatedOffsetFactor 0.25f
+#define kAnimatedOffsetFactorLeft 0.5f
+#define kAnimatedOffsetFactorRight 0.5f
 #define kDimViewMaxAlpha 0.5f
 
 typedef NS_ENUM(NSInteger, CHSlideDirection)
@@ -34,7 +35,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     UIPanGestureRecognizer *_leftSwipe;  // used for interactiv sliding
     UIPanGestureRecognizer *_rightSwipe; // used for interactiv sliding
     
-
+    UITapGestureRecognizer *_tapRecognizer; // used for detecting a tap on the slided away sliding view
     
     CHSlideDirection direction; // active interactive sliding direction
     
@@ -46,6 +47,10 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     CGFloat _percentageOfDraggingCompleted; // value betwwen 0.0 and 1.0 telling how much of the dragging distance of the sliding view is completed, used for interactive sliding. 1.0 when slideview totally visibly
     
+    // currently unused
+    CGRect initialLeftStaticViewFrame;
+    CGRect initialRightStaticViewFrame;
+    CGRect initialSlidingViewFrame;
     
     UIView *statusBar;
     
@@ -77,6 +82,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 -(void)CH_layoutForOrientation;
 
 -(void)CH_applySlidingViewDim;
+
+-(CGFloat)CH_setAnimationOffsetFactor:(CGFloat)animationOffsetFactor;
 
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL CH_isSlidingViewVisibleOnScreen;
 
@@ -135,7 +142,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         
         
         
-        
+        _leftAnimationSlidingAnimationFactor = kAnimatedOffsetFactorLeft;
+        _rightAnimationSlidingAnimationFactor = kAnimatedOffsetFactorRight;
         
 
         
@@ -148,6 +156,18 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 /////////////////// Public methods //////////////////////
 #pragma mark - Public methods
+
+-(void)setLeftAnimationSlidingAnimationFactor:(CGFloat)leftAnimationSlidingAnimationFactor
+{
+    _leftAnimationSlidingAnimationFactor = [self CH_setAnimationOffsetFactor:leftAnimationSlidingAnimationFactor];
+}
+
+-(void)setRightAnimationSlidingAnimationFactor:(CGFloat)rightAnimationSlidingAnimationFactor
+{
+    _rightAnimationSlidingAnimationFactor = [self CH_setAnimationOffsetFactor:rightAnimationSlidingAnimationFactor];
+}
+
+
 
 -(void)showSlidingViewAnimated:(BOOL)animated
 {
@@ -622,7 +642,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     _leftStaticView.frame = CGRectMake(0, 0, cuttedOffLeftStaticWidth, self.view.bounds.size.height);
     _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-cuttedOffRightStaticWidth, 0, cuttedOffRightStaticWidth, self.view.bounds.size.height);
     
-    
+   // initialLeftStaticViewFrame = _leftStaticView.frame;
+    //initialRightStaticViewFrame = _rightStaticView.frame;
     
     
     CGFloat leftStaticWidth = _leftStaticView.bounds.size.width;
@@ -647,13 +668,13 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         _slidingView.frame = CGRectMake(0, 0, slidingWidth, self.view.bounds.size.height);
         
         
-        if (_animateLeftStaticViewWhenSliding) {
-            _leftStaticView.frame = CGRectMake(-1*slidingWidth*kAnimatedOffsetFactor, 0, cuttedOffLeftStaticWidth, self.view.bounds.size.height);
-        }
+        _leftStaticView.frame = CGRectMake(_slidingView.frame.origin.x-_leftStaticViewWidth+((_leftStaticViewWidth-_slidingView.frame.origin.x)*_leftAnimationSlidingAnimationFactor), 0, _leftStaticViewWidth, self.view.bounds.size.height);
         
-        if (_animateRightStaticViewWhenSliding) {
-            _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-cuttedOffRightStaticWidth+slidingWidth*kAnimatedOffsetFactor, 0, cuttedOffRightStaticWidth, self.view.bounds.size.height);
-        }
+        
+        _rightStaticView.frame = CGRectMake((_slidingView.frame.origin.x+_slidingView.frame.size.width)+((-1*(_slidingView.frame.origin.x+_rightStaticViewWidth))*_rightAnimationSlidingAnimationFactor), 0, _leftStaticViewWidth, self.view.bounds.size.height);
+        
+        
+
         
     }
     
@@ -700,6 +721,9 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     [self CH_applySlidingViewDim];
     
+   // initialSlidingViewFrame = _slidingView.frame;
+    
+    
 }
 
 -(void)CH_positionStatusBar
@@ -726,9 +750,11 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 -(void)CH_applySlidingViewDim
 {
     if (_dimSlidingViewWhenNoCoveringStaticView) {
+        _dimView.backgroundColor = [UIColor blackColor];
         _dimView.alpha = kDimViewMaxAlpha-_percentageOfDraggingCompleted;
     }else {
-        _dimView.alpha = 0.0;
+        _dimView.alpha = 1.0;
+        _dimView.backgroundColor = [UIColor clearColor];
     }
 }
 
@@ -736,6 +762,14 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 -(void)setAnimateLeftStaticViewWhenSliding:(BOOL)animateLeftStaticViewWhenSliding
 {
+    
+    if (animateLeftStaticViewWhenSliding) {
+        _leftAnimationSlidingAnimationFactor = 0.5;
+    }else {
+        _leftAnimationSlidingAnimationFactor = 1.0;
+    }
+    
+    
     _animateLeftStaticViewWhenSliding = animateLeftStaticViewWhenSliding;
     
     [self.view setNeedsLayout];
@@ -743,6 +777,13 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 -(void)setAnimateRightStaticViewWhenSliding:(BOOL)animateRightStaticViewWhenSliding
 {
+    
+    if (animateRightStaticViewWhenSliding) {
+        _rightAnimationSlidingAnimationFactor = 0.5;
+    }else {
+        _rightAnimationSlidingAnimationFactor = 1.0;
+    }
+    
     _animateRightStaticViewWhenSliding = animateRightStaticViewWhenSliding;
     
     [self.view setNeedsLayout];
@@ -752,6 +793,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 #pragma mark - UIGestureRecognizerDelegate
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
+    
     BOOL shouldSlide = YES;
     
     if ([delegate respondsToSelector:@selector(shouldSlideControllerSlide:)]) {
@@ -821,12 +863,14 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             
             if (newSlidingRect.origin.x < 0) {
                 newSlidingRect.origin.x = 0;
+                NSLog(@"new sliding rect origin < 0");
                 validSlide = NO;
             }
             
             
-            if (newSlidingRect.origin.x > _leftStaticView.frame.origin.x+_leftStaticView.frame.size.width) {
+            if (newSlidingRect.origin.x > _leftStaticViewWidth) {
                 newSlidingRect.origin.x = _leftStaticViewWidth;
+                NSLog(@"new sliding rect origin > LEFT WIDTH");
                 validSlide = NO;
                 _leftStaticView.frame = CGRectMake(0, 0, _leftStaticViewWidth, self.view.bounds.size.height);
 
@@ -836,10 +880,10 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             _slidingView.frame = newSlidingRect;
             
             [self CH_positionStatusBar];
-            
-            if (_animateLeftStaticViewWhenSliding && validSlide) {
-                _leftStaticView.frame = CGRectOffset(_leftStaticView.frame, (_xPosCurrent-_xPosLastSample)*kAnimatedOffsetFactor, 0);
-            }
+    
+
+                        _leftStaticView.frame = CGRectMake(_slidingView.frame.origin.x-_leftStaticViewWidth+((_leftStaticViewWidth-_slidingView.frame.origin.x)*_leftAnimationSlidingAnimationFactor), 0, _leftStaticViewWidth, self.view.bounds.size.height);
+   
 
             //setting the lastSamplePoint as the current one
             
@@ -893,8 +937,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 - (void)handlePanGestureRight:(UIPanGestureRecognizer *)recognizer
 {
-    
-
+    //NSLog(@"pan right");
+          
     
     CGPoint touchPoint = [recognizer locationInView:self.view];
     
@@ -944,9 +988,10 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
              
              */
             
-            if (newSlidingRect.origin.x+newSlidingRect.size.width < _rightStaticView.frame.origin.x) {
-                newSlidingRect.origin.x = _rightStaticView.frame.origin.x-newSlidingRect.size.width;
-                _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-_rightStaticViewWidth, 0, _rightStaticViewWidth, self.view.bounds.size.height);
+            if (newSlidingRect.origin.x < -_rightStaticViewWidth) {
+                newSlidingRect.origin.x = -_rightStaticViewWidth;
+               // _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-_rightStaticViewWidth, 0, _rightStaticViewWidth, self.view.bounds.size.height);
+                NSLog(@"Case 1 %@",NSStringFromCGRect(newSlidingRect));
                 validSlide = NO;
             }
             
@@ -956,22 +1001,25 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
             if (newSlidingRect.origin.x > 0) {
                 newSlidingRect.origin.x = 0;
                 validSlide = NO;
+                NSLog(@"Case 2");
             }
             
             _slidingView.frame = newSlidingRect;
             
             [self CH_positionStatusBar];
+
             
-            if (_animateRightStaticViewWhenSliding && validSlide) {
-                _rightStaticView.frame = CGRectOffset(_rightStaticView.frame, (_xPosCurrent-_xPosLastSample)*kAnimatedOffsetFactor, 0);
-            }
+            
+      
+                  _rightStaticView.frame = CGRectMake((_slidingView.frame.origin.x+_slidingView.frame.size.width)+((-1*(_slidingView.frame.origin.x+_rightStaticViewWidth))*_rightAnimationSlidingAnimationFactor), 0, _leftStaticViewWidth, self.view.bounds.size.height);
+
             
             
             CGFloat totalSlidingDistance = _rightStaticView.bounds.size.width;
             
             _percentageOfDraggingCompleted = 1.0-((_slidingView.frame.origin.x)/totalSlidingDistance*-1);
             
-            NSLog(@"dist %.2f",_percentageOfDraggingCompleted);
+           // NSLog(@"dist %.2f",_percentageOfDraggingCompleted);
             
             [self CH_applySlidingViewDim];
             
@@ -1018,6 +1066,12 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     }
 }
 
+-(void)handleTapGesture:(UITapGestureRecognizer *)recognizer
+{
+    if (delegate && [delegate respondsToSelector:@selector(slideControllerdidTapOnSlidedView:)]) {
+        [delegate slideControllerdidTapOnSlidedView:self];
+    }
+}
 
 /////////////////////// View Lifecycle ////////////////////
 #pragma mark - View Lifecycle
@@ -1079,6 +1133,11 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     _rightSwipe.maximumNumberOfTouches = 1;
     [_rightSafeAreaView addGestureRecognizer:_rightSwipe];
     
+    _tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    _tapRecognizer.delegate = self;
+    //[_leftSafeAreaView addGestureRecognizer:_tapRecognizer];
+    [_slidingView addGestureRecognizer:_tapRecognizer];
+    
     self.allowEdgeSwipingForSlideingView = _allowEdgeSwipingForSlideingView;
     
     _leftSafeAreaView.backgroundColor = [UIColor blueColor];
@@ -1117,7 +1176,16 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     _rightSwipe = nil;
 }
 
-
+-(CGFloat)CH_setAnimationOffsetFactor:(CGFloat)animationOffsetFactor
+{
+    if (animationOffsetFactor < 0.0f) {
+        return 0.0f;
+    }else if (animationOffsetFactor > 1.0f) {
+        return 1.0f;
+    }else {
+        return animationOffsetFactor;
+    }
+}
 
 /////////////////////// Refactored delegate calls ////////////////////
 #pragma mark - Refactored delegate calls
@@ -1219,5 +1287,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 {
     return kSwipeAnimationTime;
 }
+
+
 
 @end

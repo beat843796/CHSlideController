@@ -8,6 +8,7 @@
 
 #import "CHSlidingDemo.h"
 
+
 @implementation CHSlidingDemo
 
 @synthesize textLabel = _textLabel;
@@ -25,6 +26,7 @@
     _textLabel.textAlignment = NSTextAlignmentCenter;
     _textLabel.text = @"Select something from left menu";
     [self.view addSubview:_textLabel];
+
 }
 
 -(void)viewWillLayoutSubviews
@@ -32,6 +34,8 @@
     [super viewWillLayoutSubviews];
     
     _textLabel.frame = self.view.bounds;
+    
+
 }
 
 

@@ -42,6 +42,8 @@
 
 -(BOOL)shouldSlideControllerSlide:(CHSlideController *)slideController;
 
+-(void)slideControllerdidTapOnSlidedView:(CHSlideController *)slideController;
+
 @end
 
 @interface CHSlideController : UIViewController
@@ -101,14 +103,22 @@
 /**
  *  Animates the left static view when sliding view is moved
  */
-@property (assign, nonatomic) BOOL animateLeftStaticViewWhenSliding;
+@property (assign, nonatomic) BOOL animateLeftStaticViewWhenSliding DEPRECATED_ATTRIBUTE;
 
 /**
  *  Animates the right static view when sliding view is moved
  */
-@property (assign, nonatomic) BOOL animateRightStaticViewWhenSliding;
+@property (assign, nonatomic) BOOL animateRightStaticViewWhenSliding DEPRECATED_ATTRIBUTE;
 
+/**
+ *  Slides the status bar with the sliding view - not recommended for appstore builds
+ */
 @property (assign, nonatomic) BOOL stickStatusBarToSlidingView;
+
+/**
+ *  Allow userinteraction when view is slided
+ */
+@property (assign, nonatomic) BOOL allowUserinteractionWhenViewIsSlided;
 
 /**
  *  Animates the Sliding View in
@@ -133,6 +143,18 @@
 
 -(void)setLeftStaticViewWidth:(CGFloat)leftStaticViewWidth animated:(BOOL)animated;
 -(void)setRightStaticViewWidth:(CGFloat)rightStaticViewWidth animated:(BOOL)animated;
+
+/*
+ Value between 0.0f and 1.0f
+ 
+ 0.0 = slide with sliding view
+ >0.0<1.0 = like swipe back in uinavigationcontroller
+ 1.0 = dont slide at all - slideview covers static views
+ 
+ 
+*/
+@property (nonatomic, assign) CGFloat leftAnimationSlidingAnimationFactor;
+@property (nonatomic, assign) CGFloat rightAnimationSlidingAnimationFactor;
 
 @property (NS_NONATOMIC_IOSONLY, getter=isLeftStaticViewMaximized, readonly) BOOL leftStaticViewMaximized;
 @property (NS_NONATOMIC_IOSONLY, getter=isRightStaticViewMaximized, readonly) BOOL rightStaticViewMaximized;

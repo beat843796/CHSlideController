@@ -63,12 +63,11 @@
         
         //self.allowInteractiveSlideing = YES;
         
-        self.leftStaticViewWidth = 320;//self.view.bounds.size.width-55;
-        self.rightStaticViewWidth = 320;//self.view.bounds.size.width-55;
+        self.leftStaticViewWidth = self.view.bounds.size.width-55;
+        self.rightStaticViewWidth = self.view.bounds.size.width-55;
         //self.slideViewVisibleWidthWhenHidden = 50;
         
-        self.animateLeftStaticViewWhenSliding = YES;
-        self.animateRightStaticViewWhenSliding = YES;
+
         
         _textSelectionController.title = @"Left static controller";
         self.allowEdgeSwipingForSlideingView = YES;
@@ -80,8 +79,12 @@
         self.rightStaticViewController = _rightController;
         self.slidingViewController = nav;
         
+        //self.dimSlidingViewWhenNoCoveringStaticView = NO;
+        
        // self.stickStatusBarToSlidingView = YES;
-
+        
+        self.leftAnimationSlidingAnimationFactor = 0.75;
+        self.rightAnimationSlidingAnimationFactor = 1.0;
 
         
     }
