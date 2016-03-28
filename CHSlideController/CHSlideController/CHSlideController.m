@@ -180,6 +180,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         }
     }
     
+    
+    
     [self CH_willShowSlidingView];
     
     BOOL wasLeftViewVisible = NO;
@@ -653,17 +655,17 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     // setting the frame of sliding view
     
     if (isLeftStaticViewVisible) {
-        
+        _tapRecognizer.enabled = YES;
         // Static view is uncovered
         
         _slidingView.frame = CGRectMake(leftStaticWidth, 0, slidingWidth, self.view.bounds.size.height);
         
     }else if (isRightStaticViewVisible) {
-        
+        _tapRecognizer.enabled = YES;
         _slidingView.frame = CGRectMake(_rightStaticView.frame.origin.x-slidingWidth, 0, slidingWidth, self.view.bounds.size.height);
         
     }else {
-        
+        _tapRecognizer.enabled = NO;
         // Static view is covered
         _slidingView.frame = CGRectMake(0, 0, slidingWidth, self.view.bounds.size.height);
         
