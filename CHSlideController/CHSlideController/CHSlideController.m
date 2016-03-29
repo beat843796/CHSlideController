@@ -344,7 +344,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     [_leftStaticViewController willMoveToParentViewController:nil];
     [_leftStaticViewController removeFromParentViewController];
     
-    [staticViewController.view removeFromSuperview];
+    [_leftStaticViewController.view removeFromSuperview];
     
     _leftStaticViewController = staticViewController;
     
@@ -368,7 +368,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     [_rightStaticViewController willMoveToParentViewController:nil];
     [_rightStaticViewController removeFromParentViewController];
     
-    [staticViewController.view removeFromSuperview];
+    [_rightStaticViewController.view removeFromSuperview];
     
     _rightStaticViewController = staticViewController;
     
