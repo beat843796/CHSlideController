@@ -338,7 +338,9 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 -(void)setLeftStaticViewController:(UIViewController *)staticViewController
 {
-    
+    if (self.leftStaticViewController == staticViewController) {
+        return;
+    }
     // Doing viewcontroller containment magic
     
     [_leftStaticViewController willMoveToParentViewController:nil];
@@ -362,7 +364,9 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 -(void)setRightStaticViewController:(UIViewController *)staticViewController
 {
-    
+    if (self.rightStaticViewController == staticViewController) {
+        return;
+    }
     // Doing viewcontroller containment magic
     
     [_rightStaticViewController willMoveToParentViewController:nil];
@@ -386,6 +390,10 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 -(void)setSlidingViewController:(UIViewController *)slidingViewController
 {
+    
+    if (self.slidingViewController == slidingViewController) {
+        return;
+    }
     
     // Doing viewcontroller containment magic
     
