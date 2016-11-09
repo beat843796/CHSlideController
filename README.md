@@ -54,7 +54,7 @@ Create and configure the CHSlideController and add it to your window/view
 ```
 Check out the demo project for more examples of configurations
 
-Cocoapods
+CocoaPods
 -------
 CocoaPods are the best way to manage library dependencies in Objective-C projects.
 Learn more at http://cocoapods.org
