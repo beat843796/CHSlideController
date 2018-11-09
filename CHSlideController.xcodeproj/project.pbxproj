@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AB18A29316FB2D2200CB9B5A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB18A29216FB2D2100CB9B5A /* Default-568h@2x.png */; };
 		AB18A29616FB324200CB9B5A /* CHRightStaticDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = AB18A29516FB324200CB9B5A /* CHRightStaticDemo.m */; };
+		ABEDF0CC2195C9B8001235A3 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ABEDF0CB2195C9B8001235A3 /* Launch Screen.storyboard */; };
 		ABF40589163178300097AD38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF40588163178300097AD38 /* UIKit.framework */; };
 		ABF4058B163178300097AD38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF4058A163178300097AD38 /* Foundation.framework */; };
 		ABF4058D163178300097AD38 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABF4058C163178300097AD38 /* CoreGraphics.framework */; };
@@ -23,9 +23,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AB18A29216FB2D2100CB9B5A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		AB18A29416FB324200CB9B5A /* CHRightStaticDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHRightStaticDemo.h; sourceTree = "<group>"; };
 		AB18A29516FB324200CB9B5A /* CHRightStaticDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHRightStaticDemo.m; sourceTree = "<group>"; };
+		ABEDF0CB2195C9B8001235A3 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		ABF40584163178300097AD38 /* CHSlideController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CHSlideController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABF40588163178300097AD38 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		ABF4058A163178300097AD38 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -146,9 +146,9 @@
 				AB18A29916FB35DC00CB9B5A /* sliding controller */,
 				AB18A29816FB35CE00CB9B5A /* right static view controller */,
 				AB18A29716FB35C500CB9B5A /* left static view controller */,
-				AB18A29216FB2D2100CB9B5A /* Default-568h@2x.png */,
 				ABF405B01631928B0097AD38 /* DemoSlideControllerSubclass.h */,
 				ABF405B11631928B0097AD38 /* DemoSlideControllerSubclass.m */,
+				ABEDF0CB2195C9B8001235A3 /* Launch Screen.storyboard */,
 			);
 			name = Demo;
 			sourceTree = "<group>";
@@ -189,7 +189,7 @@
 		ABF4057B163178300097AD38 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0710;
+				LastUpgradeCheck = 1000;
 			};
 			buildConfigurationList = ABF4057E163178300097AD38 /* Build configuration list for PBXProject "CHSlideController" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -213,8 +213,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABEDF0CC2195C9B8001235A3 /* Launch Screen.storyboard in Resources */,
 				ABF40593163178300097AD38 /* InfoPlist.strings in Resources */,
-				AB18A29316FB2D2200CB9B5A /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,11 +271,21 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -311,11 +321,21 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -345,7 +365,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CHSlideController/CHSlideController-Prefix.pch";
 				INFOPLIST_FILE = "CHSlideController/CHSlideController-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "at.appingo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -358,7 +378,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CHSlideController/CHSlideController-Prefix.pch";
 				INFOPLIST_FILE = "CHSlideController/CHSlideController-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "at.appingo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

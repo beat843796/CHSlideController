@@ -470,9 +470,9 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         
         [self CH_layoutForOrientation];
         
-        if ([_leftStaticViewController isKindOfClass:[UINavigationController class]] && [_leftStaticViewController respondsToSelector:@selector(navigationBar)]) {
+        if ([self->_leftStaticViewController isKindOfClass:[UINavigationController class]] && [self->_leftStaticViewController respondsToSelector:@selector(navigationBar)]) {
 
-            [((UINavigationController *)_leftStaticViewController).navigationBar layoutSubviews];
+            [((UINavigationController *)self->_leftStaticViewController).navigationBar layoutSubviews];
 
         }
         
@@ -507,8 +507,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         [self CH_layoutForOrientation];
         
         // needed to smoothly animate navbar if present without jumping title and buttons
-        if ([_rightStaticViewController isKindOfClass:[UINavigationController class]] && [_rightStaticViewController respondsToSelector:@selector(navigationBar)]) {
-            [((UINavigationController *)_rightStaticViewController).navigationBar layoutSubviews];
+        if ([self->_rightStaticViewController isKindOfClass:[UINavigationController class]] && [self->_rightStaticViewController respondsToSelector:@selector(navigationBar)]) {
+            [((UINavigationController *)self->_rightStaticViewController).navigationBar layoutSubviews];
         }
     }];
 }
@@ -615,11 +615,11 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 ///////////////////////// Autorotation Stuff /////////////////////////
 #pragma mark - Autorotation stuff
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+-(BOOL)shouldAutorotate
 {
-    // Return YES for supported orientations
     return YES;
 }
+
 
 -(void)viewWillLayoutSubviews
 {
@@ -1158,10 +1158,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 
 
-- (void)viewDidUnload
+-(void)dealloc
 {
-    [super viewDidUnload];
-    
     [_leftSafeAreaView removeFromSuperview];
     [_rightSafeAreaView removeFromSuperview];
     
@@ -1183,6 +1181,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     _leftSwipe = nil;
     _rightSwipe = nil;
 }
+
+
 
 -(CGFloat)CH_setAnimationOffsetFactor:(CGFloat)animationOffsetFactor
 {

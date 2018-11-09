@@ -100,7 +100,7 @@
         //[_textSelectionController.navigationController setNavigationBarHidden:YES animated:NO];
         [self setLeftStaticViewWidth:self.view.bounds.size.width animated:YES];
         
-        [_textSelectionController.searchController.searchBar layoutSubviews];
+        [self->_textSelectionController.searchController.searchBar layoutSubviews];
         
 
     }];
@@ -112,10 +112,10 @@
 
     [UIView animateWithDuration:self.animationTimeInterval animations:^{
         
-        [_textSelectionController.navigationController setNavigationBarHidden:NO animated:NO];
+        [self->_textSelectionController.navigationController setNavigationBarHidden:NO animated:NO];
         [self setLeftStaticViewWidth:self.view.bounds.size.width-55 animated:YES];
         
-        [_textSelectionController.searchController.searchBar layoutSubviews];
+        [self->_textSelectionController.searchController.searchBar layoutSubviews];
         
         
     }];
