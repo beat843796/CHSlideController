@@ -630,6 +630,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 - (void)CH_layoutForOrientation
 {
+ 
+   
     
     // Setting the frames of static
 
