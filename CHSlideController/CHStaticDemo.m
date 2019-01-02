@@ -20,7 +20,7 @@
     if (self) {
 
         // Create some dummy data
-        _data = @[@"Test 1",@"Test 2",@"Test 3",@"Hide Statusbar",@"Hide Navigationbar", @"Shadow ON/OFF",@"Change Width",@"DIM ON/OFF"];
+        _data = @[@"Test 1",@"Test 2",@"Test 3",@"Hide Statusbar",@"Hide Navigationbar", @"Shadow ON/OFF",@"Change Width",@"DIM ON/OFF",@"Toggle Bottom View"];
         
         self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
         //self.searchController.searchResultsUpdater = self;

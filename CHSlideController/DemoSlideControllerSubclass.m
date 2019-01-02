@@ -182,10 +182,20 @@
         
         self.dimSlidingViewWhenNoCoveringStaticView = !self.dimSlidingViewWhenNoCoveringStaticView;
         
-    }    
-
-   // [self.view setNeedsLayout];
-    
+    }else if ([text isEqualToString:@"Toggle Bottom View"]) {
+        
+        
+        if (self.bottomView == nil) {
+            UIView *testBottomView = [[UIView alloc] init];
+            testBottomView.backgroundColor = [UIColor blueColor];
+            [self setBottomView:testBottomView];
+        }else {
+            [self setBottomView:nil];
+        }
+        
+        
+        
+    }
     
 }
 

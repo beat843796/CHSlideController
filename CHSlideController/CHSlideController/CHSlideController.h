@@ -75,6 +75,11 @@
 @property (strong, nonatomic) UIViewController *slidingViewController;
 
 /**
+ *  A view that is displayed on the bottom (can be used for progress bar or similar things)
+ */
+@property (strong, nonatomic) UIView *bottomView;
+
+/**
  *  If set to yes a shadow will be drawn under the slidingView. Defaults to YES
  */
 @property (assign, nonatomic) BOOL drawShadow;
@@ -144,15 +149,16 @@
 -(void)setLeftStaticViewWidth:(CGFloat)leftStaticViewWidth animated:(BOOL)animated;
 -(void)setRightStaticViewWidth:(CGFloat)rightStaticViewWidth animated:(BOOL)animated;
 
+-(void)setBottomView:(UIView *)bottomView withHeight:(CGFloat)bottomViewHeight;
+
 /*
  Value between 0.0f and 1.0f
  
  0.0 = slide with sliding view
  >0.0<1.0 = like swipe back in uinavigationcontroller
  1.0 = dont slide at all - slideview covers static views
- 
- 
 */
+
 @property (nonatomic, assign) CGFloat leftAnimationSlidingAnimationFactor;
 @property (nonatomic, assign) CGFloat rightAnimationSlidingAnimationFactor;
 

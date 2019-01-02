@@ -19,6 +19,7 @@
 #define kAnimatedOffsetFactorLeft 0.5f
 #define kAnimatedOffsetFactorRight 0.5f
 #define kDimViewMaxAlpha 0.5f
+#define kDefaultBottomViewHeight 45.0f
 
 typedef NS_ENUM(NSInteger, CHSlideDirection)
 {
@@ -53,6 +54,8 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     CGRect initialSlidingViewFrame;
     
     UIView *statusBar;
+    
+    CGFloat defaultViewHeight;
     
 }
 
@@ -421,6 +424,29 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     }
 }
 
+-(void)setBottomView:(UIView *)bottomView
+{
+    [self setBottomView:bottomView withHeight:kDefaultBottomViewHeight];
+}
+
+-(void)setBottomView:(UIView *)bottomView withHeight:(CGFloat)bottomViewHeight
+{
+    // TODO: implement
+    
+    [_bottomView removeFromSuperview];
+    _bottomView = nil;
+    
+     defaultViewHeight = bottomViewHeight;
+    
+    _bottomView = bottomView;
+    
+    if (_bottomView != nil) {
+        [self.view addSubview:_bottomView];
+    }
+    
+    [self CH_layoutForOrientation];
+}
+
 -(void)setLeftStaticViewWidth:(CGFloat)staticViewWidth
 {
     
@@ -648,11 +674,18 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     }
     
 
+    CGFloat contentHeight;
+    
+    if (_bottomView == nil) {
+        contentHeight = self.view.bounds.size.height;
+    }else {
+        contentHeight = self.view.bounds.size.height-defaultViewHeight;
+    }
 
     
     // setting desired frames
-    _leftStaticView.frame = CGRectMake(0, 0, cuttedOffLeftStaticWidth, self.view.bounds.size.height);
-    _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-cuttedOffRightStaticWidth, 0, cuttedOffRightStaticWidth, self.view.bounds.size.height);
+    _leftStaticView.frame = CGRectMake(0, 0, cuttedOffLeftStaticWidth, contentHeight);
+    _rightStaticView.frame = CGRectMake(self.view.bounds.size.width-cuttedOffRightStaticWidth, 0, cuttedOffRightStaticWidth, contentHeight);
     
    // initialLeftStaticViewFrame = _leftStaticView.frame;
     //initialRightStaticViewFrame = _rightStaticView.frame;
@@ -668,22 +701,22 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         _tapRecognizer.enabled = YES;
         // Static view is uncovered
         
-        _slidingView.frame = CGRectMake(leftStaticWidth, 0, slidingWidth, self.view.bounds.size.height);
+        _slidingView.frame = CGRectMake(leftStaticWidth, 0, slidingWidth, contentHeight);
         
     }else if (isRightStaticViewVisible) {
         _tapRecognizer.enabled = YES;
-        _slidingView.frame = CGRectMake(_rightStaticView.frame.origin.x-slidingWidth, 0, slidingWidth, self.view.bounds.size.height);
+        _slidingView.frame = CGRectMake(_rightStaticView.frame.origin.x-slidingWidth, 0, slidingWidth, contentHeight);
         
     }else {
         _tapRecognizer.enabled = NO;
         // Static view is covered
-        _slidingView.frame = CGRectMake(0, 0, slidingWidth, self.view.bounds.size.height);
+        _slidingView.frame = CGRectMake(0, 0, slidingWidth, contentHeight);
         
         
-        _leftStaticView.frame = CGRectMake(_slidingView.frame.origin.x-_leftStaticViewWidth+((_leftStaticViewWidth-_slidingView.frame.origin.x)*_leftAnimationSlidingAnimationFactor), 0, _leftStaticViewWidth, self.view.bounds.size.height);
+        _leftStaticView.frame = CGRectMake(_slidingView.frame.origin.x-_leftStaticViewWidth+((_leftStaticViewWidth-_slidingView.frame.origin.x)*_leftAnimationSlidingAnimationFactor), 0, _leftStaticViewWidth, contentHeight);
         
         
-        _rightStaticView.frame = CGRectMake((_slidingView.frame.origin.x+_slidingView.frame.size.width)+((-1*(_slidingView.frame.origin.x+_rightStaticViewWidth))*_rightAnimationSlidingAnimationFactor), 0, _leftStaticViewWidth, self.view.bounds.size.height);
+        _rightStaticView.frame = CGRectMake((_slidingView.frame.origin.x+_slidingView.frame.size.width)+((-1*(_slidingView.frame.origin.x+_rightStaticViewWidth))*_rightAnimationSlidingAnimationFactor), 0, _leftStaticViewWidth, contentHeight);
         
         
 
@@ -706,12 +739,12 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
     
     if (!isLeftStaticViewVisible && !isRightStaticViewVisible) {
         _leftSafeAreaView.frame = CGRectMake(0, 0, 15, _slidingView.bounds.size.height);
-        _rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-15, 0, 15, self.view.bounds.size.height);
+        _rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-15, 0, 15, contentHeight);
     }else {
         
         if (isLeftStaticViewVisible) {
             _leftSafeAreaView.frame = CGRectMake(0, 0, fabs(_slidingView.bounds.size.width-_leftStaticView.bounds.size.width), _slidingView.bounds.size.height);
-            _rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-0, 0, 0, self.view.bounds.size.height);
+            _rightSafeAreaView.frame = CGRectMake(_slidingView.bounds.size.width-0, 0, 0, contentHeight);
         }
         
         if (isRightStaticViewVisible) {
