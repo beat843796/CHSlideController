@@ -431,8 +431,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
 
 -(void)setBottomView:(UIView *)bottomView withHeight:(CGFloat)bottomViewHeight
 {
-    // TODO: implement
-    
+  
     [_bottomView removeFromSuperview];
     _bottomView = nil;
     
@@ -680,6 +679,7 @@ typedef NS_ENUM(NSInteger, CHSlideDirection)
         contentHeight = self.view.bounds.size.height;
     }else {
         contentHeight = self.view.bounds.size.height-defaultViewHeight;
+        _bottomView.frame = CGRectMake(0, contentHeight, self.view.bounds.size.width, defaultViewHeight);
     }
 
     
